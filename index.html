@@ -1,0 +1,1743 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Layanan Kesehatan — Demo</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --teal-900: #088f83;
+      --teal-800: #0da99f;
+      --teal-700: #12c0a7;
+      --teal-600: #2dd4bf;
+      --teal-500: #14b8a6;
+      --bg: #f8fafc;
+      --muted:#64748b;
+      --card:#ffffff;
+      --shadow: 0 8px 30px rgba(2,6,23,0.08);
+      --radius:14px;
+    }
+
+    html{
+      scroll-behavior: smooth;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background: linear-gradient(90deg,#0ea5a0 0%, #2dd4bf 100%);
+      color:#0f172a;
+    }
+
+    .topbar {
+      background: linear-gradient(90deg, #049f94 0%, #12c0a7 100%);
+      color: #fff;
+      padding: 14px 24px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+
+    .topbar .left {
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .logo {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      text-decoration:none;
+      color:white;
+    }
+    .logo .logo-icon{
+      width:44px;
+      height:44px;
+      border-radius:10px;
+      background:rgba(255,255,255,0.18);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+    }
+    .logo h1{
+      font-family:Poppins, Inter;
+      font-size:16px;
+      margin:0;
+      line-height:1;
+      font-weight:700;
+    }
+    .logo p{
+      margin:0;
+      font-size:12px;
+      opacity:0.95;
+      line-height:1;
+      color:rgba(255,255,255,0.95);
+    }
+
+    .topbar .right{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .top-item {
+      display:flex;
+      align-items:center;
+      gap:8px;
+      background: rgba(255,255,255,0.06);
+      padding:8px 12px;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:14px;
+      color:#fff;
+    }
+    .top-item .small {
+      font-size:12px;
+      opacity:0.95;
+    }
+
+    .topbar .login-btn{
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: white;
+      padding:8px 12px;
+      border-radius:8px;
+      font-weight:600;
+    }
+
+    .navbar {
+      background:white;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:14px 24px;
+      box-shadow: 0 4px 20px rgba(2,6,23,0.06);
+      position:sticky;
+      top:0;
+      z-index:60;
+    }
+
+    .nav-links{
+      display:flex;
+      gap:18px;
+      align-items:center;
+      transition: 0.5s;
+    }
+    .nav-links a {
+      text-decoration:none;
+      color:#0f172a;
+      padding:8px 10px;
+      font-weight:600;
+      border-radius:8px;
+      transition: background-color 0.2s;
+    }
+    .nav-links a:hover{
+      background: rgba(2,6,23,0.03);
+    }
+
+    .search-area{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .search-area input[type="search"]{
+      border:1px solid #e6eef0;
+      padding:10px 14px;
+      border-radius:10px;
+      min-width:260px;
+      outline:none;
+      font-size:14px;
+      box-shadow: none;
+      transition: border-color 0.2s;
+    }
+    .search-area input[type="search"]:focus {
+      border-color: var(--teal-600);
+    }
+    .search-area button{
+      background:transparent;
+      border:none;
+      cursor:pointer;
+      padding:8px;
+    }
+
+    .menu-toggle{
+      display:none;
+      background:transparent;
+      border:none;
+      cursor:pointer;
+      padding:8px;
+    }
+
+    .page {
+      max-width:1200px;
+      margin: 28px auto 80px;
+      padding: 0 24px 60px;
+    }
+
+    .hero-title {
+      text-align:center;
+      margin-bottom:28px;
+      color: #eafaf8;
+    }
+    .hero-title h2{
+      font-family: Poppins, Inter;
+      font-size:34px;
+      margin:0 0 10px 0;
+      color:#ffffff;
+      text-shadow: 0 2px 0 rgba(0,0,0,0.03);
+    }
+    .hero-title p{
+      margin:0;
+      color: rgba(255,255,255,0.9);
+      max-width:760px;
+      margin-left:auto;
+      margin-right:auto;
+      font-size:16px;
+      line-height:1.5;
+    }
+
+    .news-carousel {
+      position:relative;
+      margin-top:28px;
+      background: var(--card);
+      border-radius:18px;
+      overflow:hidden;
+      display:flex;
+      min-height:340px;
+      box-shadow: var(--shadow);
+    }
+    
+    .carousel-left { 
+      width:50%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .carousel-right { 
+      width:50%;
+      padding:36px 44px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:18px;
+      position: relative;
+    }
+
+    .slide-track { 
+      display:flex; 
+      height:100%; 
+      transition:transform 420ms cubic-bezier(.2,.9,.3,1); 
+      will-change:transform; 
+    }
+    
+    .slide { 
+      min-width:100%; 
+      display:flex; 
+      align-items:center; 
+      justify-content:center; 
+      padding:0;
+      height: 100%;
+    }
+    
+    .slide-image{ 
+      width:100%; 
+      height:100%; 
+      border-radius:0;
+      overflow:hidden; 
+      position:relative; 
+    }
+    
+    .slide-image img{ 
+      display:block; 
+      width:100%; 
+      height:100%; 
+      object-fit:cover; 
+    }
+
+    .tag { 
+      position:absolute; 
+      left:36px; 
+      top:16px; 
+      background: rgba(20,184,166,0.12); 
+      color: #065f56; 
+      border-radius:999px; 
+      padding:8px 14px; 
+      font-weight:600; 
+      font-size:13px; 
+      z-index:6; 
+      backdrop-filter: blur(4px);
+    }
+
+    .image-arrow { 
+      position:absolute; 
+      top:50%; 
+      transform:translateY(-50%); 
+      width:40px; 
+      height:40px; 
+      border-radius:10px; 
+      background: rgba(255,255,255,0.96); 
+      border:none; 
+      display:flex; 
+      align-items:center; 
+      justify-content:center; 
+      cursor:pointer; 
+      box-shadow:0 6px 18px rgba(2,6,23,0.12); 
+      z-index:6; 
+      transition: all 0.2s;
+    }
+    .image-arrow:hover {
+      background: white;
+      box-shadow: 0 8px 20px rgba(2,6,23,0.18);
+    }
+    .image-arrow.left{ left:18px; } 
+    .image-arrow.right{ right:18px; } 
+    .image-arrow svg{ width:18px;height:18px;color:#0f172a;opacity:0.9 }
+
+    .meta { 
+      display:flex; 
+      align-items:center; 
+      gap:10px; 
+      color:var(--muted); 
+      font-size:14px; 
+      font-weight:500; 
+    }
+    .news-title { 
+      font-family:Poppins, Inter; 
+      font-size:28px; 
+      margin:0; 
+      color:#081129; 
+      line-height:1.2; 
+      font-weight:700; 
+    }
+    .excerpt { 
+      color:#475569; 
+      margin:0 0 6px 0; 
+      font-size:15px; 
+      max-width:520px; 
+      line-height:1.5;
+    }
+    .cta { 
+      display:inline-flex; 
+      align-items:center; 
+      gap:10px; 
+      padding:11px 18px; 
+      background: linear-gradient(180deg,var(--teal-700),var(--teal-500)); 
+      color:white; 
+      border-radius:10px; 
+      font-weight:600; 
+      text-decoration:none; 
+      width:max-content; 
+      box-shadow: 0 8px 18px rgba(16,185,129,0.18); 
+      transition: all 0.2s;
+    }
+    .cta:hover {
+      box-shadow: 0 10px 22px rgba(16,185,129,0.25);
+      transform: translateY(-2px);
+    }
+
+    .carousel-dots { 
+      position:absolute; 
+      bottom:22px; 
+      left:50%; 
+      transform:translateX(-50%); 
+      display:flex; 
+      gap:10px; 
+      z-index:8; 
+    }
+    .dot { 
+      width:12px; 
+      height:12px; 
+      background: rgba(255,255,255,0.6); 
+      border-radius:999px; 
+      display:inline-block; 
+      box-shadow: 0 3px 0 rgba(0,0,0,0.06); 
+      cursor:pointer; 
+      transition: all 0.2s;
+    }
+    .dot.active { 
+      background: white; 
+      width:14px; 
+      height:14px; 
+    }
+    .dot:hover {
+      background: rgba(255,255,255,0.8);
+    }
+
+    .services {
+      width: 100%;
+      background: #f5fdff;
+      padding: 60px 0;
+      margin-top: 40px;
+    }
+
+    .services-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .services .services-head {
+      text-align: center;
+      margin-bottom: 40px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .services .services-head h2 {
+      margin: 0 0 12px;
+      font-family: Poppins, Inter;
+      font-size: 32px;
+      color: #0b2a2a;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .services .services-head p {
+      margin: 0;
+      color: #4b6b6b;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 6px 18px rgba(6,20,28,0.04);
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+      min-height: 220px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .card .icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(6, 180, 162, 0.08);
+      color: var(--teal-700);
+      flex-shrink: 0;
+      transition: all 0.25s ease;
+    }
+
+    .card .icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .card-content {
+      flex: 1;
+    }
+
+    .card h4 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      color: #0b2730;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .card p {
+      margin: 0 0 20px;
+      color: #5a6c6c;
+      font-size: 14px;
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .card .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: 1px solid rgba(15,23,42,0.08);
+      font-weight: 600;
+      background: transparent;
+      color: #0b2730;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      font-size: 14px;
+      width: 100%;
+      margin-top: auto;
+    }
+
+    .card .cta svg {
+      width: 16px;
+      height: 16px;
+      margin-left: 6px;
+      opacity: 0.8;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 32px rgba(2,6,23,0.12);
+    }
+
+    .card:hover .icon {
+      background: rgba(16,185,129,0.12);
+      transform: scale(1.05);
+    }
+
+    .card:hover .cta {
+      background: linear-gradient(180deg, var(--teal-700), var(--teal-500));
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 6px 16px rgba(16,185,129,0.2);
+    }
+
+    .help-cta {
+      width: 100%;
+      background: transparent;
+      padding: 48px 0 80px;
+    }
+
+    .help-cta-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .help-box {
+      background: linear-gradient(90deg, var(--teal-700, #12c0a7) 0%, var(--teal-500, #14b8a6) 100%);
+      color: #fff;
+      padding: 44px 36px;
+      border-radius: 18px;
+      text-align: center;
+      box-shadow: 0 18px 40px rgba(2,6,23,0.12);
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      align-items:center;
+    }
+
+    .help-box h2 {
+      margin:0;
+      font-family: Poppins, Inter, sans-serif;
+      font-size:28px;
+      font-weight:700;
+      letter-spacing:0.2px;
+    }
+    .help-box .help-desc {
+      margin:0;
+      max-width:820px;
+      color: rgba(255,255,255,0.92);
+      font-size:15px;
+      line-height:1.7;
+    }
+
+    .help-actions {
+      display:flex;
+      gap:14px;
+      margin-top:6px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+
+    .btn {
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 20px;
+      border-radius:10px;
+      font-weight:700;
+      font-size:15px;
+      text-decoration:none;
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,0.18);
+      background: transparent;
+      color: #fff;
+      transition: transform .15s ease, box-shadow .15s ease, opacity .12s ease;
+    }
+
+    .btn-primary {
+      background: rgba(255,255,255,0.12);
+      box-shadow: 0 8px 18px rgba(2,6,23,0.08);
+      border: none;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .btn .ico {
+      display:inline-block;
+      stroke: currentColor;
+      opacity: 0.95;
+    }
+
+    .btn:hover {
+      transform: translateY(-4px);
+      opacity: 0.98;
+    }
+    .btn-primary:hover {
+      background: rgba(255,255,255,0.18);
+      box-shadow: 0 12px 28px rgba(2,6,23,0.12);
+    }
+
+    .about-us{
+      width: 100%;
+      background: #eff1f1;
+      padding: 60px 0;
+      margin-top: 40px;
+    }
+
+    .about-platform {
+      width: 100%;
+      padding: 56px 0 48px;
+      background: transparent;
+    }
+
+    .about-platform .btn.small {
+      background: var(--teal-500);
+      color: #e7eaeb !important;
+      border: none !important;
+      padding: 12px 22px;
+      font-weight: 700;
+      box-shadow: 0 8px 20px rgba(2,6,23,0.06);
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .about-platform .btn.small:hover {
+      box-shadow: 0 12px 28px rgba(2,6,23,0.12);
+      transform: translateY(-3px);
+    }
+
+    .about-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 1fr 520px;
+      gap: 36px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size:12px;
+      color: var(--teal-700);
+      font-weight:700;
+      letter-spacing:0.6px;
+      margin-bottom:12px;
+    }
+
+    .about-title {
+      margin: 0 0 16px;
+      font-family: Poppins, Inter, sans-serif;
+      font-size:38px;
+      line-height:1.02;
+      color:#082130;
+      font-weight:800;
+    }
+    .about-title .accent { color: var(--teal-700); display:block; }
+
+    .about-desc {
+      color:#5b6b73;
+      font-size:16px;
+      line-height:1.8;
+      margin:0 0 20px;
+      max-width: 620px;
+    }
+
+    .about-features {
+      list-style: none;
+      padding: 0;
+      margin: 8px 0 22px;
+    }
+    .about-features li {
+      display:flex;
+      gap:12px;
+      margin-bottom:12px;
+      align-items:flex-start;
+    }
+    .about-features li strong { display:block; font-weight:700; margin-bottom:4px; color:#102328; font-size:15px; }
+    .about-features li p { margin:0; color:#6b7b7b; font-size:14px; line-height:1.5; }
+
+    .about-features li::before {
+      content: "";
+      display:block;
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      margin-top:6px;
+      flex-shrink:0;
+    }
+    .about-features li:nth-child(1)::before { background: #00a99a; }
+    .about-features li:nth-child(2)::before { background: #5ad39f; }
+    .about-features li:nth-child(3)::before { background: #ff9b6b; }
+
+    .btn.small { padding: 12px 18px; border-radius:8px; font-weight:700; display:inline-block; }
+
+    .about-media .media-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(2,6,23,0.08);
+      background: #fff;
+    }
+
+    .about-media img {
+      display:block;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      min-height: 320px;
+    }
+
+    .media-badge {
+      position: absolute;
+      left: 28px;
+      bottom: 26px;
+      background: linear-gradient(180deg,var(--teal-700),var(--teal-500));
+      color: #fff;
+      width:120px;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 14px 32px rgba(18, 129, 123, 0.12);
+      text-align:center;
+    }
+    .media-badge .badge-num {
+      font-weight:800;
+      font-size:20px;
+      line-height:1;
+    }
+    .media-badge .badge-text {
+      font-size:12px;
+      opacity:0.95;
+      margin-top:4px;
+    }
+
+    .stats-row {
+      max-width: 1200px;
+      margin: 36px auto 0;
+      padding: 0 24px;
+      display:flex;
+      gap:36px;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .stat {
+      text-align:center;
+      flex:1;
+      min-width: 160px;
+    }
+    .stat-icon {
+      width:56px;
+      height:56px;
+      border-radius:10px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(16,185,129,0.07);
+      color: var(--teal-700);
+      margin-bottom:12px;
+    }
+    .stat-number {
+      font-weight:800;
+      font-size:26px;
+      color:#0b2730;
+    }
+    .stat-label {
+      color:#6b7b7b;
+      font-size:13px;
+      margin-top:6px;
+    }
+
+    .site-footer {
+      background: linear-gradient(90deg, var(--teal-700) 0%, var(--teal-500) 100%);
+      color: white;
+      padding: 48px 0 28px;
+      margin-top:28px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .footer-left {
+      max-width: 380px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .footer-brand h3 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .footer-brand p {
+      margin: 0;
+      font-size: 13px;
+      opacity: .9;
+    }
+
+    .footer-desc {
+      margin: 0 0 18px;
+      line-height: 1.6;
+      opacity: .95;
+    }
+
+    .footer-contact {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-contact li {
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: .95;
+    }
+
+    .footer-newsletter h4 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .footer-newsletter p {
+      margin: 0 0 16px;
+      opacity: .9;
+    }
+
+    .newsletter-input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 12px;
+    }
+
+    .footer-newsletter .newsletter-btn {
+      background:#ffffff !important;
+      color: #0b2730 !important;
+      border: none !important;
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(2,6,23,0.08) !important;
+      transition: all 0.15s ease;
+    }
+
+    .footer-newsletter .newsletter-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(2,6,23,0.12) !important;
+    }
+
+    .social a {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 10px 12px;
+      border-radius: 10px;
+      margin-right: 8px;
+      display: inline-flex;
+    }
+
+    .footer-bottom {
+      margin-top: 30px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-bottom p {
+      margin: 0;
+      opacity: .9;
+    }
+
+    .footer-bottom a {
+      color: white;
+      opacity: .9;
+      text-decoration: none;
+      margin-left: 16px;
+    }
+
+    .footer-bottom a:hover {
+      text-decoration: underline;
+    }
+
+    #newsletter-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(3px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+    }
+
+    #newsletter-modal.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #newsletter-modal .modal-box {
+      background: #ffffff;
+      padding: 26px 28px;
+      width: 360px;
+      max-width: 90%;
+      border-radius: 14px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      transform: translateY(20px);
+      transition: transform .25s ease;
+      color: var(--teal-500);
+    }
+
+    #newsletter-modal.show .modal-box {
+      transform: translateY(0);
+    }
+
+    #newsletter-modal #close-newsletter-modal {
+      margin-top: 16px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      background: var(--teal-600, #14b8a6);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s, transform .2s;
+    }
+
+    #newsletter-modal #close-newsletter-modal:hover {
+      background: var(--teal-700, #0da99f);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width:1024px){
+      .page{ max-width:940px }
+      .search-area input[type="search"]{ min-width:200px }
+      .carousel-right { padding: 28px 36px; }
+      .news-title { font-size: 24px; }
+      .about-grid { grid-template-columns: 1fr 420px; gap:28px; }
+      .about-title { font-size:32px; }
+    }
+
+    @media (max-width:900px){
+      .menu-toggle{ display:block }
+      .nav-links{ 
+        display:none; 
+        position:absolute; 
+        left:0; 
+        top:68px; 
+        right:0; 
+        background:white; 
+        flex-direction:column; 
+        padding:16px 20px; 
+        gap:8px; 
+        box-shadow:0 12px 40px rgba(2,6,23,0.08); 
+        border-bottom-left-radius:12px; 
+        border-bottom-right-radius:12px; 
+      }
+      .nav-links.show{ display:flex }
+      .navbar{ padding:12px 16px; position:sticky; top:56px; }
+      .news-carousel{ 
+        flex-direction:column; 
+        min-height:520px;
+      }
+      .carousel-left, .carousel-right{ 
+        width:100%; 
+        min-height: 260px;
+      }
+      .carousel-right{ 
+        padding:24px; 
+        gap: 14px;
+      }
+      .carousel-left{ 
+        padding:0;
+        min-height: 260px;
+      }
+      .carousel-dots{ bottom:18px }
+      .hero-title h2 { font-size: 28px; }
+      .hero-title p { font-size: 15px; }
+      .footer-top {
+        flex-direction: column;
+        gap: 30px;
+      }
+    }
+
+    @media (max-width:640px) {
+      .topbar {
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px 16px;
+      }
+      .topbar .left, .topbar .right {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .topbar .right {
+        justify-content: flex-end;
+      }
+      .navbar {
+        flex-wrap: wrap;
+      }
+      .search-area {
+        order: 3;
+        width: 100%;
+        margin-top: 12px;
+      }
+      .search-area input[type="search"] {
+        flex: 1;
+        min-width: auto;
+      }
+      .news-carousel {
+        min-height: 480px;
+      }
+      .carousel-left, .carousel-right {
+        min-height: 220px;
+      }
+      .news-title { font-size: 22px; }
+      .excerpt { font-size: 14px; }
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+      .footer-bottom a {
+        margin: 0 8px;
+      }
+    }
+
+    @media (max-width:480px){
+      .logo h1{ font-size:14px }
+      .logo p{ font-size:11px }
+      .hero-title h2{ font-size:22px }
+      .hero-title p { font-size: 14px; }
+      .news-title{ font-size:20px }
+      .search-area input[type="search"]{ min-width:120px; padding:8px 10px }
+      .top-item span:not(.small) {
+        font-size: 13px;
+      }
+      .top-item .small {
+        font-size: 11px;
+      }
+      .topbar .login-btn {
+        padding: 6px 10px;
+        font-size: 13px;
+      }
+      .carousel-right {
+        padding: 20px;
+      }
+      .cta {
+        padding: 10px 16px;
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 20px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .services {
+        padding: 36px 16px;
+        margin-top: 28px;
+      }
+      
+      .services .services-head h2 {
+        font-size: 28px;
+      }
+      
+      .services .services-head p {
+        font-size: 15px;
+      }
+      
+      .cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 18px;
+      }
+      
+      .card {
+        padding: 20px;
+        min-height: 200px;
+      }
+      
+      .card-header {
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+      
+      .card .icon {
+        width: 48px;
+        height: 48px;
+      }
+      
+      .card .icon svg {
+        width: 20px;
+        height: 20px;
+      }
+      
+      .card h4 {
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .services {
+        padding: 28px 12px;
+      }
+      
+      .services .services-head {
+        margin-bottom: 32px;
+      }
+      
+      .services .services-head h2 {
+        font-size: 24px;
+      }
+      
+      .cards-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      
+      .card {
+        padding: 18px;
+      }
+    }
+
+    @media (max-width:900px){
+      .help-box {
+        padding: 36px 20px;
+        border-radius:14px;
+      }
+      .help-box h2 { font-size:22px; }
+      .help-actions { gap:10px; }
+      .btn { padding:10px 16px; font-size:14px; }
+    }
+
+    @media (max-width:520px){
+      .help-actions {
+        flex-direction:column;
+        width:100%;
+        align-items:center;
+      }
+      .btn { width: 86%; justify-content:center; }
+      .stat { flex-basis: 100%; }
+      .about-title { font-size:22px; }
+      .about-desc { font-size:15px; }
+    }
+
+    @media (max-width:840px) {
+      .about-grid { grid-template-columns: 1fr; padding-bottom: 6px; }
+      .about-media { order: -1; }
+      .about-media .media-card { margin-bottom:18px; }
+      .media-badge { left: 18px; bottom: 16px; }
+      .stats-row { flex-wrap:wrap; gap:20px; justify-content:center; }
+      .stat { flex-basis: 45%; }
+    }
+
+    .sr-only{ position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0 }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div class="left">
+        <a href="#" class="logo" aria-label="Layanan Kesehatan - Beranda">
+          <span class="logo-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="white" stroke-opacity="0.9" stroke-width="1.6" /><path d="M7 9h3l1 1h6" stroke="white" stroke-opacity="0.9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <div>
+            <h1>Layanan Kesehatan</h1>
+            <p>Republik Indonesia</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="right">
+       
+
+        <div class="top-item" title="Telepon">
+          <img src="telephone.png" alt="" style="width: 16px; height: 16px;">
+          <div>
+            <a href="tel:119" style="cursor: pointer; text-decoration: none; color: inherit;">
+              <div class="small">119</div>
+              <div style="font-weight:600; font-size:13px;">Telepon</div>
+            </a>
+          </div>
+        </div>
+
+        <div class="top-item" title="Bahasa">
+          <div style="font-weight:700">ID</div>
+        </div>
+
+        <button class="login-btn" aria-label="Login">Login</button>
+      </div>
+    </div>
+
+    <nav class="navbar" role="navigation" aria-label="Utama">
+      <button class="menu-toggle" id="menuToggle" aria-label="Buka menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="#0f172a" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+
+      <div style="display:flex;align-items:center;gap:18px">
+        <div class="nav-links" id="navLinks">
+          <a href="index.html">Beranda</a>
+          <a href="index.html #services">Layanan</a>
+          <a href="#">Fasilitas Kesehatan</a>
+          <a href="#">Informasi</a>
+          <a href="#">Kontak</a>
+        </div>
+      </div>
+
+      <div class="search-area" role="search" aria-label="Pencarian layanan kesehatan">
+        <input type="search" placeholder="Cari layanan kesehatan..." aria-label="Cari layanan kesehatan">
+        <button aria-label="Cari">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35" stroke="#0f172a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="11" r="6" stroke="#0f172a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="page">
+    <div class="hero-title">
+      <h2>Informasi Kesehatan Terkini</h2>
+      <p>Dapatkan informasi terbaru seputar pelayanan kesehatan dan program pemerintah untuk masyarakat Indonesia</p>
+    </div>
+
+    <section class="news-carousel" aria-roledescription="carousel" aria-label="Berita Kesehatan">
+      <div class="carousel-left">
+        <div class="tag"></div>
+
+        <button class="image-arrow left" id="prevBtn" aria-label="Sebelumnya">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+
+        <div class="slide-track" id="slideTrack">
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="1 dari 3">
+            <div class="slide-image">
+              <img src="https://jurnalpost.com/wp-content/uploads/2024/05/Kesehatan-di-Daerah-terpencil.jpg" alt="Ilustrasi tenaga kesehatan 1">
+            </div>
+          </div>
+
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="2 dari 3">
+            <div class="slide-image">
+              <img src="https://www.labkesmas-baturaja.go.id/asset/fotoartikel/68telemedicine%20web.jpg" alt="Ilustrasi tenaga kesehatan 2">
+            </div>
+          </div>
+
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="3 dari 3">
+            <div class="slide-image">
+              <img src="https://be-lms.kemkes.go.id/v1/view?path=gp/uploads/images/1725587794299-af18fd3f-c502-4692-9f3e-a7913fd49e5e.jpg" alt="Ilustrasi tenaga kesehatan 3">
+            </div>
+          </div>
+        </div>
+
+        <button class="image-arrow right" id="nextBtn" aria-label="Berikutnya">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+      </div>
+
+      <div class="carousel-right">
+        <div class="meta" id="metaDate">
+          <div id="dateText">10 September 2024</div>
+        </div>
+
+        <h3 class="news-title" id="newsTitle">Peningkatan Fasilitas Kesehatan di Daerah Terpencil</h3>
+        <p class="excerpt" id="newsExcerpt">
+          Pembangunan 500 Puskesmas baru dan renovasi fasilitas kesehatan di seluruh Indonesia untuk meningkatkan akses pelayanan.
+        </p>
+
+        <a href="#" class="cta" id="readMoreBtn">
+          Baca Selengkapnya
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="opacity:0.9"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7" stroke="white"/></svg>
+        </a>
+
+        <div class="carousel-dots" id="dots">
+          <span class="dot active" data-index="0" aria-label="Slide 1"></span>
+          <span class="dot" data-index="1" aria-label="Slide 2"></span>
+          <span class="dot" data-index="2" aria-label="Slide 3"></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="services" id="services">
+    <section class="services-container" aria-label="Layanan Kesehatan Digital">
+      <div class="services-head">
+        <h2>Layanan Kesehatan Digital</h2>
+        <p>Akses mudah dan cepat ke berbagai layanan kesehatan melalui platform digital pemerintah</p>
+      </div>
+
+      <div class="cards-grid">
+        <article class="card" role="article">
+          <div class="card-header">
+            <div class="icon" aria-hidden="true">
+              <img src="calendar.png" alt="" style="width: 24px; height: 24px;">
+            </div>
+            <div class="card-content">
+              <h4>Cek Jadwal Dokter</h4>
+            </div>
+          </div>
+          <p>Lihat jadwal praktik dokter dan spesialis di fasilitas kesehatan terdekat</p>
+          <a class="cta" href="jadwal_dokter.html">
+            Akses Layanan
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7" stroke="currentColor"/>
+            </svg>
+          </a>
+        </article>
+
+        <article class="card" role="article">
+          <div class="card-header">
+            <div class="icon" aria-hidden="true">
+              <img src="doctor.png" alt="" style="width: 24px; height: 24px;">
+            </div>
+            <div class="card-content">
+              <h4>Buat Janji Dokter</h4>
+            </div>
+          </div>
+          <p>Daftar online untuk konsultasi dengan dokter dan spesialis pilihan Anda</p>
+          <a class="cta" href="jadwal_dokter.html">
+            Akses Layanan
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7" stroke="currentColor"/>
+            </svg>
+          </a>
+        </article>
+
+        <article class="card" role="article">
+          <div class="card-header">
+            <div class="icon" aria-hidden="true">
+              <img src="mental-disorder.png" alt="" style="width: 24px; height: 24px;">
+            </div>
+            <div class="card-content">
+              <h4>Konsultasi Mental Health</h4>
+            </div>
+          </div>
+          <p>Layanan konseling dan dukungan kesehatan mental dengan psikolog profesional</p>
+          <a class="cta" href="#">
+            Akses Layanan
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7" stroke="currentColor"/>
+            </svg>
+          </a>
+        </article>
+
+        <article class="card" role="article">
+          <div class="card-header">
+            <div class="icon" aria-hidden="true">
+              <img src="telephone.png" alt="" style="width: 24px; height: 24px;">
+            </div>
+            <div class="card-content">
+              <h4>Hotline Darurat</h4>
+            </div>
+          </div>
+          <p>Hubungi layanan darurat 119 untuk bantuan medis segera 24/7</p>
+          <a class="cta" href="tel:119">
+            Akses Layanan
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7" stroke="currentColor"/>
+            </svg>
+          </a>
+        </article>
+
+        <article class="card" role="article">
+          <div class="card-header">
+            <div class="icon" aria-hidden="true">
+              <img src="wellness.png" alt="" style="width: 24px; height: 24px;">
+            </div>
+            <div class="card-content">
+              <h4>Program Kesehatan</h4>
+            </div>
+          </div>
+          <p>Ikuti program vaksinasi, skrining kesehatan, dan edukasi kesehatan masyarakat</p>
+          <a class="cta" href="#">
+            Akses Layanan
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7" stroke="currentColor"/>
+            </svg>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <section class="help-cta" aria-label="Butuh Bantuan Segera">
+      <div class="help-cta-inner">
+        <div class="help-box" role="region" aria-labelledby="help-title">
+          <h2 id="help-title">Butuh Bantuan Segera?</h2>
+          <p class="help-desc">Tim layanan kesehatan kami siap membantu Anda 24/7 melalui berbagai saluran komunikasi</p>
+
+          <div class="help-actions" role="group" aria-label="Aksi cepat">
+            <a class="btn btn-primary" href="tel:119" aria-label="Hubungi 119"> 
+              <img src="telephone.png" alt="" style="width: 24px; height: 24px;">
+              Hubungi 119
+            </a>
+
+            <button class="btn btn-outline" id="liveChatBtn" aria-label="Live Chat">
+              <img src="chat.png" alt="" style="width: 24px; height: 24px;">
+              Live Chat
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-us">
+      <section class="about-platform" aria-label="Tentang Kami">
+        <div class="about-grid">
+          <div class="about-content">
+            <span class="eyebrow">TENTANG KAMI</span>
+            <h2 class="about-title">Platform Kesehatan Digital <span class="accent">Terpercaya</span></h2>
+            <p class="about-desc">
+              Layanan Kesehatan Digital Indonesia adalah platform e-government yang menghubungkan masyarakat dengan fasilitas dan tenaga kesehatan di seluruh nusantara. Kami berkomitmen memberikan akses kesehatan yang mudah, cepat, dan berkualitas untuk seluruh rakyat Indonesia.
+            </p>
+
+            <ul class="about-features">
+              <li>
+                <strong>Akses Universal</strong>
+                <p>Layanan kesehatan untuk semua, di mana saja, kapan saja</p>
+              </li>
+              <li>
+                <strong>Teknologi Terkini</strong>
+                <p>Platform digital canggih dengan keamanan data terjamin</p>
+              </li>
+              <li>
+                <strong>Tenaga Profesional</strong>
+                <p>Dokter dan tenaga kesehatan bersertifikat di seluruh Indonesia</p>
+              </li>
+            </ul>
+
+            <a href="#" class="btn btn-primary small">Pelajari Lebih Lanjut</a>
+          </div>
+
+          <div class="about-media">
+            <div class="media-card">
+              <img src="https://kontraktorhvac.com/wp-content/uploads/2020/02/ruang-operasi.jpg" alt="Ruang operasi modern" />
+              <div class="media-badge">
+                <div class="badge-num">24/7</div>
+                <div class="badge-text">Layanan Darurat</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat">
+            <div class="stat-icon">
+              <img src="medical.png" alt="" style="width: 20px; height: 20px;">
+            </div>
+            <div class="stat-number" data-target="2500000">0</div>
+            <div class="stat-label">Pengguna Terdaftar</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-icon">
+              <img src="hospital.png" alt="" style="width: 20px; height: 20px;">
+            </div>
+            <div class="stat-number" data-target="10000">0</div>
+            <div class="stat-label">Fasilitas Kesehatan</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-icon">
+              <img src="location-pin.png" alt="" style="width: 20px; height: 20px;">
+            </div>
+            <div class="stat-number" data-target="514">0</div>
+            <div class="stat-label">Kota Tersedia</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-icon">
+              <img src="like.png" alt="" style="width: 20px; height: 20px;">
+            </div>
+            <div class="stat-number" data-target="98">0</div>
+            <div class="stat-label">Kepuasan Pengguna (%)</div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </div>
+
+  <section class="footer-container">
+    <footer class="site-footer" role="contentinfo">
+      <div class="footer-inner">
+        <div class="footer-top">
+          <div class="footer-left">
+            <div class="footer-brand">
+              <div class="footer-logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                  <rect x="3" y="5" width="18" height="14" rx="2" stroke="white" stroke-opacity="0.9" stroke-width="1.6"/>
+                  <path d="M7 9h3l1 1h6" stroke="white" stroke-opacity="0.9" stroke-width="1.6"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div>
+                <h3>Layanan Kesehatan</h3>
+                <p>Republik Indonesia</p>
+              </div>
+            </div>
+
+            <p class="footer-desc">
+              Platform kesehatan digital terpercaya yang menghubungkan masyarakat dengan
+              fasilitas kesehatan terbaik di seluruh Indonesia.
+            </p>
+
+            <ul class="footer-contact">
+              <li>
+                <a href="tel:119" style="text-decoration: none; cursor: pointer; color: inherit;">
+                  <img src="telephone.png" alt="" style="width: 16px; height: 16px;">
+                  119 (Darurat)
+                </a>
+              </li>
+              <li>
+                <img src="mail.png" alt="" style="width: 24px; height: 24px;">
+                info@kesehatan.go.id
+              </li>
+              <li>
+                <img src="location.png" alt="" style="width: 24px; height: 24px;">
+                Jakarta, Indonesia
+              </li>
+            </ul>
+          </div>
+
+          <div class="footer-newsletter">
+            <h4>Newsletter</h4>
+            <p>Dapatkan informasi terbaru seputar kesehatan dan program pemerintah</p>
+
+            <input type="email" placeholder="Email Anda" class="newsletter-input" id="newsletter-email">
+            <button class="newsletter-btn" id="newsletter-btn">Berlangganan</button>
+
+            <div class="social" style="margin-top: 16px;">
+              <a href="#" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+              <a href="#" aria-label="Twitter"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg></a>
+              <a href="#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+              <a href="#" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>© 2024 Kementerian Kesehatan Republik Indonesia.</p>
+          <div class="policies">
+            <a href="#">Kebijakan Privasi</a>
+            <a href="#">Syarat & Ketentuan</a>
+            <a href="#">Aksesibilitas</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </section>
+
+  <div id="newsletter-modal" class="modal-overlay">
+    <div class="modal-box">
+      <h3>Berlangganan Berhasil!</h3>
+      <p>Nantikan info seputar kesehatan dari kami ya! 😊</p>
+      <button id="close-newsletter-modal">OK</button>
+    </div>
+  </div>
+
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    menuToggle && menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('show');
+      menuToggle.setAttribute('aria-expanded', navLinks.classList.contains('show'));
+    });
+
+    document.addEventListener('click', (e) => {
+      if(window.innerWidth <= 900){
+        if(!navLinks.contains(e.target) && !menuToggle.contains(e.target)){
+          navLinks.classList.remove('show');
+        }
+      }
+    });
+
+    const slidesData = [
+      {
+        date: '10 September 2024',
+        title: 'Peningkatan Fasilitas Kesehatan di Daerah Terpencil',
+        excerpt: 'Pembangunan 500 Puskesmas baru dan renovasi fasilitas kesehatan di seluruh Indonesia untuk meningkatkan akses pelayanan.'
+      },
+      {
+        date: '28 Agustus 2024',
+        title: 'Program Telemedicine Diperluas',
+        excerpt: 'Peluncuran layanan telemedicine untuk 200 puskesmas meningkatkan layanan konsultasi online bagi daerah sulit dijangkau.'
+      },
+      {
+        date: '12 Juli 2024',
+        title: 'Pelatihan Tenaga Kesehatan Baru',
+        excerpt: 'Rangkaian pelatihan kompetensi dilaksanakan untuk tenaga kesehatan tingkat pertama di 10 provinsi.'
+      }
+    ];
+
+    const slideTrack = document.getElementById('slideTrack');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const dots = Array.from(document.querySelectorAll('.dot'));
+    const dateText = document.getElementById('dateText');
+    const newsTitle = document.getElementById('newsTitle');
+    const newsExcerpt = document.getElementById('newsExcerpt');
+
+    let index = 0;
+    const total = slidesData.length;
+
+    function goTo(idx){
+      if(idx < 0) idx = total - 1;
+      if(idx >= total) idx = 0;
+      index = idx;
+      slideTrack.style.transform = 'translateX(' + (-idx*100) + '%)';
+      const data = slidesData[idx];
+      dateText.textContent = data.date;
+      newsTitle.textContent = data.title;
+      newsExcerpt.textContent = data.excerpt;
+      dots.forEach(d => d.classList.remove('active'));
+      dots[idx].classList.add('active');
+    }
+
+    prevBtn.addEventListener('click', () => { goTo(index - 1); resetAuto(); });
+    nextBtn.addEventListener('click', () => { goTo(index + 1); resetAuto(); });
+    dots.forEach(d => d.addEventListener('click', (e) => { goTo(Number(e.currentTarget.dataset.index)); resetAuto(); }));
+
+    let autoplay = setInterval(()=> goTo(index + 1), 5000);
+    function resetAuto(){ clearInterval(autoplay); autoplay = setInterval(()=> goTo(index + 1), 5000); }
+
+    document.addEventListener('keydown', (e) => { if(e.key === 'ArrowLeft'){ goTo(index-1); resetAuto(); } if(e.key === 'ArrowRight'){ goTo(index+1); resetAuto(); } });
+
+    window.addEventListener('resize', () => {
+      slideTrack.style.transition = 'none';
+      slideTrack.style.transform = 'translateX(' + (-index*100) + '%)';
+      requestAnimationFrame(()=> slideTrack.style.transition = 'transform 420ms cubic-bezier(.2,.9,.3,1)');
+    });
+
+    goTo(0);
+
+    document.getElementById('liveChatBtn')?.addEventListener('click', function(){
+      alert('Ditunggu update selanjutnya ya :)');
+    });
+
+    (function(){
+      const counters = document.querySelectorAll('.stat-number');
+      const speed = 2000;
+
+      if (!('IntersectionObserver' in window)) {
+        counters.forEach(c => c.textContent = formatNumber(c.dataset.target));
+        return;
+      }
+
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          const target = Number(el.dataset.target) || 0;
+          animateCount(el, target, speed);
+          io.unobserve(el);
+        });
+      }, { threshold: 0.5 });
+
+      counters.forEach(el => io.observe(el));
+
+      function animateCount(el, to, duration) {
+        const start = 0;
+        const startTime = performance.now();
+        function tick(now) {
+          const progress = Math.min((now - startTime) / duration, 1);
+          const val = Math.floor(progress * (to - start) + start);
+          el.textContent = formatNumber(val);
+          if (progress < 1) requestAnimationFrame(tick);
+          else {
+            if (to <= 100 && String(to).length <= 3) el.textContent = String(to);
+            else el.textContent = formatNumber(to);
+          }
+        }
+        requestAnimationFrame(tick);
+      }
+
+      function formatNumber(n) {
+        if (n >= 1000000) return Math.floor(n/1000000) + 'M+';
+        if (n >= 1000 && n < 1000000) return Math.floor(n/1000) + 'K+';
+        return n.toString();
+      }
+    })();
+
+    document.getElementById('newsletter-btn')
+      .addEventListener('click', function () {
+        const email = document.getElementById('newsletter-email').value;
+        if (email && email.includes('@')) {
+          document.getElementById('newsletter-modal').classList.add('show');
+        } else {
+          alert('Masukkan email yang valid!');
+        }
+      });
+
+    document.getElementById('close-newsletter-modal')
+      .addEventListener('click', function () {
+        document.getElementById('newsletter-modal').classList.remove('show');
+      });
+
+    document.getElementById('newsletter-modal')
+      .addEventListener('click', function (e) {
+        if (e.target === this) {
+          this.classList.remove('show');
+        }
+      });
+  </script>
+</body>
+</html>

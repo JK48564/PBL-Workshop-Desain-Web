@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Manajemen Fasilitas Kesehatan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --info: #1abc9c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --sidebar-width: 280px;
+            --header-height: 70px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--primary);
+            color: white;
+            transition: all 0.3s ease;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            background: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            height: var(--header-height);
+        }
+        
+        .sidebar-header img {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .sidebar-header h2 {
+            font-size: 20px;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .menu-section {
+            padding: 10px 20px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #95a5a6;
+            margin-top: 15px;
+        }
+        
+        .sidebar-menu a {
+            color: #ddd;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            transition: all 0.3s;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: var(--dark);
+            color: white;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin-left: var(--sidebar-width);
+        }
+        
+        .top-header {
+            background: white;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            height: var(--header-height);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--light);
+            border-radius: 20px;
+            padding: 5px 15px;
+            width: 300px;
+        }
+        
+        .search-bar input {
+            background: transparent;
+            border: none;
+            padding: 8px;
+            width: 100%;
+            outline: none;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .content {
+            padding: 30px;
+            flex: 1;
+        }
+        
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-header h1 {
+            font-size: 28px;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .bg-primary { background: var(--secondary); color: white; }
+        .bg-success { background: var(--success); color: white; }
+        .bg-warning { background: var(--warning); color: white; }
+        .bg-accent { background: var(--accent); color: white; }
+        .bg-info { background: var(--info); color: white; }
+        
+        .card h3 {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+        
+        .card p {
+            color: #777;
+            font-size: 14px;
+        }
+        
+        .content-section {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .section-header h2 {
+            font-size: 20px;
+            color: var(--dark);
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-outline {
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+            background: transparent;
+        }
+        
+        .btn-danger {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background: #e7f6ef;
+            color: var(--success);
+        }
+        
+        .status-inactive {
+            background: #fde9e9;
+            color: var(--accent);
+        }
+        
+        .status-warning {
+            background: #fef5e9;
+            color: var(--warning);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #777;
+            transition: all 0.2s;
+        }
+        
+        .action-btn:hover {
+            background: #f5f5f5;
+            color: var(--secondary);
+        }
+        
+        .action-btn.delete:hover {
+            color: var(--accent);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .notification-badge {
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .close {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .menu-toggle {
+            display: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .facility-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 20px;
+        }
+        
+        .facility-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        .facility-info {
+            flex: 1;
+        }
+        
+        .facility-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+        
+        .facility-type {
+            color: var(--secondary);
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .facility-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .facility-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #555;
+        }
+        
+        .specialty-badge {
+            display: inline-block;
+            background: #e1f0fa;
+            color: var(--secondary);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        
+        .error-message {
+            color: var(--accent);
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+        }
+        
+        .confirmation-modal {
+            max-width: 500px;
+        }
+        
+        .confirmation-text {
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        .services-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .service-tag {
+            background: #f0f7ff;
+            color: var(--secondary);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+        
+        .remove-service-btn {
+            background: none;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid var(--secondary);
+            color: var(--secondary);
+            font-weight: 500;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 70px;
+            }
+            
+            .sidebar-header h2, .sidebar-menu span, .menu-section {
+                display: none;
+            }
+            
+            .sidebar-header {
+                justify-content: center;
+            }
+            
+            .sidebar-menu a {
+                justify-content: center;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .top-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+                height: auto;
+                padding: 15px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .sidebar.open {
+                width: 280px;
+            }
+            
+            .sidebar.open .sidebar-header h2, 
+            .sidebar.open .sidebar-menu span, 
+            .sidebar.open .menu-section {
+                display: block;
+            }
+            
+            .sidebar.open .sidebar-menu a {
+                justify-content: flex-start;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .filter-row {
+                flex-direction: column;
+            }
+            
+            .filter-group {
+                min-width: 100%;
+            }
+            
+            .facility-card {
+                flex-direction: column;
+            }
+            
+            .facility-photo {
+                width: 100%;
+                height: 200px;
+            }
+            
+            .facility-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                padding: 10px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MCA1MCI+PHBhdGggZD0iTTI1IDVDMTQuNzg2IDUgNi41IDEzLjI4NiA2LjUgMjMuNWMwIDUuNDI3IDIuMzgyIDEwLjMwOCA2LjE3NiAxMy42OTdsLTAuODc1IDQuNzYyYzAuMDA3IDAuMTYzIDAuMDk0IDAuMzEzIDAuMjI2IDAuNDA2YzAuMTM0IDAuMDk0IDAuMzA2IDAuMTE3IDAuNDU2IDAuMDZsNS4wODgtMi4zMTJjMS41NTYgMC40NDMgMy4xOTYgMC42ODEgNC44ODkgMC42ODFjMTAuMjE0IDAgMTguNS04LjI4NiAxOC41LTE4LjVTMzUuMjE0IDUgMjUgNXoiIGZpbGw9IiMzNDk4ZGIiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjE4IiByPSIzIiBmaWxsPSJ3aGl0ZSIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iMTgiIHI9IjMiIGZpbGw9IndoaXRlIi8+PHBhdGggZD0iTTE2IDI4YzEgMyA0IDUgNyA1czYtMiA3LTUiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==" alt="Logo">
+                <h2>Admin Panel</h2>
+            </div>
+            <nav class="sidebar-menu">
+                <div class="menu-section">Menu Utama</div>
+                <ul>
+                    <li><a href="Index_Admin.html"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+                    <li><a href="#"><i class="fas fa-chart-line"></i> <span>Statistik & Laporan</span></a></li>
+                </ul>
+                
+                <div class="menu-section">Manajemen Pengguna</div>
+                <ul>
+                    <li><a href="#"><i class="fas fa-user-shield"></i> <span>Manajemen Akun</span></a></li>
+                    <li><a href="#"><i class="fas fa-users-cog"></i> <span>Role & Permission</span></a></li>
+                    <li><a href="#"><i class="fas fa-history"></i> <span>Audit Trail</span></a></li>
+                </ul>
+                
+                <div class="menu-section">Manajemen Data</div>
+                <ul>
+                    <li><a href="Laporan_pasien.html"><i class="fas fa-user-injured"></i> <span>Data Pasien</span></a></li>
+                    <li><a href="Manajemen Dokter.html"><i class="fas fa-user-md"></i> <span>Tenaga Kesehatan</span></a></li>
+                    <li><a href="Manajemen_fasilitas.html" class="active"><i class="fas fa-hospital"></i> <span>Fasilitas Kesehatan</span></a></li>
+                    <li><a href="#"><i class="fas fa-pills"></i> <span>Manajemen Obat</span></a></li>
+                </ul>
+                
+                <div class="menu-section">Layanan</div>
+                <ul>
+                    <li><a href="#"><i class="fas fa-calendar-check"></i> <span>Janji Temu</span></a></li>
+                    <li><a href="#"><i class="fas fa-clock"></i> <span>Manajemen Antrian</span></a></li>
+                    <li><a href="#"><i class="fas fa-exchange-alt"></i> <span>Rujukan</span></a></li>
+                </ul>
+                
+                <div class="menu-section">Integrasi & Keamanan</div>
+                <ul>
+                    <li><a href="#"><i class="fas fa-plug"></i> <span>Integrasi API</span></a></li>
+                    <li><a href="#"><i class="fas fa-shield-alt"></i> <span>Keamanan Data</span></a></li>
+                    <li><a href="#"><i class="fas fa-database"></i> <span>Backup & Recovery</span></a></li>
+                </ul>
+                
+                <div class="menu-section">Konten & Pengaturan</div>
+                <ul>
+                    <li><a href="#"><i class="fas fa-newspaper"></i> <span>Informasi Kesehatan</span></a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> <span>Pengaturan Sistem</span></a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <div class="top-header">
+                <div class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="globalSearch" placeholder="Cari...">
+                </div>
+                <div class="user-info">
+                    <div class="notifications" style="position: relative;">
+                        <i class="fas fa-bell" id="notificationIcon"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    <div class="user-avatar">
+                        <span>A</span>
+                    </div>
+                    <div class="user-details">
+                        <h4>Admin User</h4>
+                        <p>Super Administrator</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="dashboard-header">
+                    <h1>Manajemen Fasilitas Kesehatan</h1>
+                    <p>Kelola data rumah sakit, klinik, puskesmas, dan fasilitas kesehatan lainnya</p>
+                </div>
+
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <div class="card-icon bg-primary">
+                            <i class="fas fa-hospital"></i>
+                        </div>
+                        <h3 id="totalFacilities">12</h3>
+                        <p>Total Fasilitas</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon bg-success">
+                            <i class="fas fa-clinic-medical"></i>
+                        </div>
+                        <h3 id="activeFacilities">10</h3>
+                        <p>Fasilitas Aktif</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon bg-warning">
+                            <i class="fas fa-stethoscope"></i>
+                        </div>
+                        <h3 id="totalTypes">5</h3>
+                        <p>Jenis Fasilitas</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon bg-accent">
+                            <i class="fas fa-procedures"></i>
+                        </div>
+                        <h3 id="totalServices">24</h3>
+                        <p>Layanan Tersedia</p>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2>Daftar Fasilitas Kesehatan</h2>
+                        <button class="btn btn-primary" id="addFacilityBtn"><i class="fas fa-plus"></i> Tambah Fasilitas</button>
+                    </div>
+                    
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="facility-type">Filter Jenis Fasilitas</label>
+                            <select id="facility-type">
+                                <option value="">Semua Jenis</option>
+                                <option value="Rumah Sakit">Rumah Sakit</option>
+                                <option value="Klinik">Klinik</option>
+                                <option value="Puskesmas">Puskesmas</option>
+                                <option value="Laboratorium">Laboratorium</option>
+                                <option value="Apotek">Apotek</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="facility-status">Filter Status</label>
+                            <select id="facility-status">
+                                <option value="">Semua Status</option>
+                                <option value="active">Aktif</option>
+                                <option value="inactive">Tidak Aktif</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="facility-search">Cari Fasilitas</label>
+                            <input type="text" id="facility-search" placeholder="Nama atau lokasi fasilitas">
+                        </div>
+                    </div>
+                    
+                    <div id="facilities-list">
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2>Manajemen Layanan</h2>
+                        <button class="btn btn-primary" id="manageServicesBtn"><i class="fas fa-cogs"></i> Kelola Layanan</button>
+                    </div>
+                    
+                    <div class="tabs">
+                        <div class="tab active" data-tab="services-list">Daftar Layanan</div>
+                        <div class="tab" data-tab="services-assignment">Penugasan Layanan</div>
+                    </div>
+                    
+                    <div class="tab-content active" id="services-list-tab">
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label for="service-category">Filter Kategori</label>
+                                <select id="service-category">
+                                    <option value="">Semua Kategori</option>
+                                    <option value="Medis">Medis</option>
+                                    <option value="Non-Medis">Non-Medis</option>
+                                    <option value="Diagnostik">Diagnostik</option>
+                                    <option value="Terapi">Terapi</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="service-status-filter">Filter Status</label>
+                                <select id="service-status-filter">
+                                    <option value="">Semua Status</option>
+                                    <option value="active">Aktif</option>
+                                    <option value="inactive">Tidak Aktif</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <table id="services-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Layanan</th>
+                                    <th>Nama Layanan</th>
+                                    <th>Kategori</th>
+                                    <th>Deskripsi</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="services-body">
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="tab-content" id="services-assignment-tab">
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label for="assign-facility">Pilih Fasilitas</label>
+                                <select id="assign-facility">
+                                    <option value="">Pilih Fasilitas</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="assign-service">Pilih Layanan</label>
+                                <select id="assign-service">
+                                    <option value="">Pilih Layanan</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" id="assignServiceBtn"><i class="fas fa-link"></i> Tugaskan Layanan</button>
+                        </div>
+                        
+                        <div id="assigned-services">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="facilityModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="facilityModalTitle">Tambah Fasilitas Baru</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="facilityForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="facility-name">Nama Fasilitas *</label>
+                            <input type="text" id="facility-name" placeholder="Masukkan nama fasilitas" required>
+                            <span class="error-message" id="facilityNameError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="facility-id">ID Fasilitas *</label>
+                            <input type="text" id="facility-id" placeholder="Masukkan ID fasilitas" required>
+                            <span class="error-message" id="facilityIdError"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="facility-type-modal">Jenis Fasilitas *</label>
+                            <select id="facility-type-modal" required>
+                                <option value="">Pilih Jenis</option>
+                                <option value="Rumah Sakit">Rumah Sakit</option>
+                                <option value="Klinik">Klinik</option>
+                                <option value="Puskesmas">Puskesmas</option>
+                                <option value="Laboratorium">Laboratorium</option>
+                                <option value="Apotek">Apotek</option>
+                            </select>
+                            <span class="error-message" id="facilityTypeError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="facility-status-modal">Status *</label>
+                            <select id="facility-status-modal" required>
+                                <option value="active">Aktif</option>
+                                <option value="inactive">Tidak Aktif</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="facility-address">Alamat Lengkap *</label>
+                        <textarea id="facility-address" placeholder="Masukkan alamat lengkap" required></textarea>
+                        <span class="error-message" id="facilityAddressError"></span>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="facility-phone">Telepon</label>
+                            <input type="text" id="facility-phone" placeholder="Masukkan nomor telepon">
+                        </div>
+                        <div class="form-group">
+                            <label for="facility-email">Email</label>
+                            <input type="email" id="facility-email" placeholder="Masukkan alamat email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="facility-photo">Foto (URL)</label>
+                        <input type="text" id="facility-photo" placeholder="Masukkan URL foto">
+                    </div>
+                    <div class="form-group">
+                        <label for="facility-description">Deskripsi</label>
+                        <textarea id="facility-description" placeholder="Deskripsi singkat tentang fasilitas"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="facility-services">Layanan yang Tersedia</label>
+                        <div id="facility-services-checkboxes">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelFacilityBtn">Batal</button>
+                <button class="btn btn-primary" id="saveFacilityBtn">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="servicesModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="servicesModalTitle">Kelola Layanan Kesehatan</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="servicesForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="service-name">Nama Layanan *</label>
+                            <input type="text" id="service-name" placeholder="Masukkan nama layanan" required>
+                            <span class="error-message" id="serviceNameError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="service-id">ID Layanan *</label>
+                            <input type="text" id="service-id" placeholder="Masukkan ID layanan" required>
+                            <span class="error-message" id="serviceIdError"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="service-category-modal">Kategori *</label>
+                            <select id="service-category-modal" required>
+                                <option value="">Pilih Kategori</option>
+                                <option value="Medis">Medis</option>
+                                <option value="Non-Medis">Non-Medis</option>
+                                <option value="Diagnostik">Diagnostik</option>
+                                <option value="Terapi">Terapi</option>
+                            </select>
+                            <span class="error-message" id="serviceCategoryError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="service-status-modal">Status *</label>
+                            <select id="service-status-modal" required>
+                                <option value="active">Aktif</option>
+                                <option value="inactive">Tidak Aktif</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="service-description">Deskripsi</label>
+                        <textarea id="service-description" placeholder="Deskripsi singkat tentang layanan"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelServiceBtn">Batal</button>
+                <button class="btn btn-primary" id="saveServiceBtn">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="confirmationModal">
+        <div class="modal-content confirmation-modal">
+            <div class="modal-header">
+                <h2 id="confirmationModalTitle">Konfirmasi Penghapusan</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p class="confirmation-text" id="confirmationText">Apakah Anda yakin ingin menghapus item ini?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelDeleteBtn">Batal</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn">Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let facilities = [
+            {
+                id: 'f1',
+                name: 'RSUD Dr. Soetomo',
+                type: 'Rumah Sakit',
+                address: 'Jl. Mayjen Prof. Dr. Moestopo No.6-8, Surabaya',
+                phone: '(031) 5501078',
+                email: 'info@rsudsoetomo.com',
+                photo: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
+                description: 'Rumah Sakit Umum Daerah terbesar di Jawa Timur',
+                status: 'active',
+                services: ['Rawat Inap', 'IGD', 'Laboratorium', 'Radiologi', 'Bedah']
+            },
+            {
+                id: 'f2',
+                name: 'Puskesmas Kenjeran',
+                type: 'Puskesmas',
+                address: 'Jl. Kenjeran No.45, Surabaya',
+                phone: '(031) 3812345',
+                email: 'puskesmas.kenjeran@surabaya.go.id',
+                photo: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
+                description: 'Puskesmas dengan layanan kesehatan dasar dan promotif',
+                status: 'active',
+                services: ['KIA', 'Imunisasi', 'Pengobatan', 'Konseling']
+            },
+            {
+                id: 'f3',
+                name: 'Klinik Sehat Bahagia',
+                type: 'Klinik',
+                address: 'Jl. Raya Darmo No.88, Surabaya',
+                phone: '(031) 5678901',
+                email: 'info@kliniksehatbahagia.com',
+                photo: 'https://images.unsplash.com/photo-1551076805-e1869033e561?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
+                description: 'Klinik swasta dengan dokter umum dan spesialis',
+                status: 'active',
+                services: ['Konsultasi Dokter', 'Perawatan Luka', 'MCU', 'Vaksinasi']
+            },
+            {
+                id: 'f4',
+                name: 'Laboratorium Prodia',
+                type: 'Laboratorium',
+                address: 'Jl. Diponegoro No.25, Surabaya',
+                phone: '(031) 5456789',
+                email: 'surabaya@prodia.co.id',
+                photo: 'https://upload.wikimedia.org/wikipedia/commons/5/5f/Lab_bench.jpg',
+                description: 'Laboratorium klinik terpercaya dengan berbagai jenis pemeriksaan',
+                status: 'active',
+                services: ['Tes Darah', 'Urinalisis', 'Hormon', 'Kimia Klinik']
+            },
+            {
+                id: 'f5',
+                name: 'Apotek Kimia Farma',
+                type: 'Apotek',
+                address: 'Jl. Tunjungan No.15, Surabaya',
+                phone: '(031) 5345678',
+                email: 'tunjungan@kimiafarma.co.id',
+                photo: 'https://www.metapos.id/wp-content/uploads/2023/04/kimiafarma-140110b.jpg',
+                description: 'Apotek resmi dengan obat lengkap dan berkualitas',
+                status: 'active',
+                services: ['Resep Obat', 'Obat Bebas', 'Alat Kesehatan', 'Konsultasi Apoteker']
+            },
+            {
+                id: 'f6',
+                name: 'RSIA Bunda',
+                type: 'Rumah Sakit',
+                address: 'Jl. Raya Darmo No.100, Surabaya',
+                phone: '(031) 5678123',
+                email: 'info@rsiabunda.com',
+                photo: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
+                description: 'Rumah Sakit Ibu dan Anak dengan fasilitas lengkap',
+                status: 'active',
+                services: ['KIA', 'Bedah', 'Rawat Inap', 'IGD']
+            },
+            {
+                id: 'f7',
+                name: 'Klinik Pratama',
+                type: 'Klinik',
+                address: 'Jl. Raya Kertajaya No.45, Surabaya',
+                phone: '(031) 5912345',
+                email: 'info@klinikpratama.com',
+                photo: 'https://images.unsplash.com/photo-1551076805-e1869033e561?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
+                description: 'Klinik umum dengan layanan kesehatan dasar',
+                status: 'active',
+                services: ['Pengobatan', 'Imunisasi', 'Konsultasi Dokter']
+            },
+            {
+                id: 'f8',
+                name: 'Puskesmas Sawahan',
+                type: 'Puskesmas',
+                address: 'Jl. Sawahan No.78, Surabaya',
+                phone: '(031) 5347890',
+                email: 'puskesmas.sawahan@surabaya.go.id',
+                photo: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
+                description: 'Puskesmas dengan layanan kesehatan terpadu',
+                status: 'active',
+                services: ['KIA', 'Imunisasi', 'Pengobatan', 'Konseling']
+            },
+            {
+                id: 'f9',
+                name: 'Laboratorium Klinik Utama',
+                type: 'Laboratorium',
+                address: 'Jl. Raya Diponegoro No.90, Surabaya',
+                phone: '(031) 5678901',
+                email: 'info@labutamaklinik.com',
+                photo: 'https://www.cekpremi.com/blog/wp-content/uploads/2022/11/laboratorium-klinik.jpg',
+                description: 'Laboratorium dengan peralatan modern dan akurat',
+                status: 'active',
+                services: ['Tes Darah', 'Urinalisis', 'Hormon']
+            },
+            {
+                id: 'f10',
+                name: 'Apotek Sehat',
+                type: 'Apotek',
+                address: 'Jl. Raya Kertajaya No.120, Surabaya',
+                phone: '(031) 5912345',
+                email: 'info@apoteksehat.com',
+                photo: 'https://i0.wp.com/blog.apotekdigital.com/wp-content/uploads/2023/02/Untitled-design-8-jpg.webp?fit=1920%2C1080&ssl=1',
+                description: 'Apotek dengan obat lengkap dan pelayanan ramah',
+                status: 'active',
+                services: ['Resep Obat', 'Obat Bebas', 'Alat Kesehatan']
+            },
+            {
+                id: 'f11',
+                name: 'RS Universitas Airlangga',
+                type: 'Rumah Sakit',
+                address: 'Jl. Prof. Dr. Moestopo No.47, Surabaya',
+                phone: '(031) 5917811',
+                email: 'info@rs.unair.ac.id',
+                photo: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
+                description: 'Rumah Sakit Pendidikan Universitas Airlangga',
+                status: 'inactive',
+                services: ['Rawat Inap', 'IGD', 'Laboratorium', 'Radiologi']
+            },
+            {
+                id: 'f12',
+                name: 'Klinik Gigi Senyum',
+                type: 'Klinik',
+                address: 'Jl. Raya Darmo No.150, Surabaya',
+                phone: '(031) 5678123',
+                email: 'info@klinikgigisenyum.com',
+                photo: 'https://images.unsplash.com/photo-1551076805-e1869033e561?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
+                description: 'Klinik gigi dengan dokter spesialis gigi',
+                status: 'inactive',
+                services: ['Perawatan Gigi', 'Pembersihan Karang Gigi', 'Konsultasi Gigi']
+            }
+        ];
+
+        let services = [
+            { id: 's1', name: 'Rawat Inap', category: 'Medis', description: 'Layanan perawatan pasien dalam', status: 'active' },
+            { id: 's2', name: 'IGD', category: 'Medis', description: 'Unit Gawat Darurat 24 jam', status: 'active' },
+            { id: 's3', name: 'Laboratorium', category: 'Diagnostik', description: 'Pemeriksaan sampel medis', status: 'active' },
+            { id: 's4', name: 'Radiologi', category: 'Diagnostik', description: 'Pemeriksaan dengan sinar X dan imaging', status: 'active' },
+            { id: 's5', name: 'Bedah', category: 'Medis', description: 'Layanan operasi dan pembedahan', status: 'active' },
+            { id: 's6', name: 'KIA', category: 'Medis', description: 'Kesehatan Ibu dan Anak', status: 'active' },
+            { id: 's7', name: 'Imunisasi', category: 'Medis', description: 'Vaksinasi untuk pencegahan penyakit', status: 'active' },
+            { id: 's8', name: 'Pengobatan', category: 'Medis', description: 'Konsultasi dan pengobatan umum', status: 'active' },
+            { id: 's9', name: 'Konseling', category: 'Non-Medis', description: 'Konsultasi psikologis dan kesehatan mental', status: 'active' },
+            { id: 's10', name: 'MCU', category: 'Medis', description: 'Medical Check Up untuk pemeriksaan kesehatan', status: 'active' },
+            { id: 's11', name: 'Vaksinasi', category: 'Medis', description: 'Imunisasi untuk berbagai penyakit', status: 'active' },
+            { id: 's12', name: 'Resep Obat', category: 'Non-Medis', description: 'Pemberian obat berdasarkan resep dokter', status: 'active' }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+            const globalSearch = document.getElementById('globalSearch');
+            const notificationIcon = document.getElementById('notificationIcon');
+            const notificationBadge = document.querySelector('.notification-badge');
+            
+            const addFacilityBtn = document.getElementById('addFacilityBtn');
+            const facilityModal = document.getElementById('facilityModal');
+            const facilityModalTitle = document.getElementById('facilityModalTitle');
+            const cancelFacilityBtn = document.getElementById('cancelFacilityBtn');
+            const saveFacilityBtn = document.getElementById('saveFacilityBtn');
+            const facilityForm = document.getElementById('facilityForm');
+            
+            const manageServicesBtn = document.getElementById('manageServicesBtn');
+            const servicesModal = document.getElementById('servicesModal');
+            const servicesModalTitle = document.getElementById('servicesModalTitle');
+            const cancelServiceBtn = document.getElementById('cancelServiceBtn');
+            const saveServiceBtn = document.getElementById('saveServiceBtn');
+            const servicesForm = document.getElementById('servicesForm');
+            
+            const confirmationModal = document.getElementById('confirmationModal');
+            const confirmationModalTitle = document.getElementById('confirmationModalTitle');
+            const confirmationText = document.getElementById('confirmationText');
+            const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+            
+            const assignServiceBtn = document.getElementById('assignServiceBtn');
+            
+            const facilityTypeFilter = document.getElementById('facility-type');
+            const facilityStatusFilter = document.getElementById('facility-status');
+            const facilitySearch = document.getElementById('facility-search');
+            const serviceCategoryFilter = document.getElementById('service-category');
+            const serviceStatusFilter = document.getElementById('service-status-filter');
+            
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            const closeButtons = document.querySelectorAll('.close');
+            
+            let itemToDelete = null;
+            let deleteType = null;
+            let currentEditingFacility = null;
+            let currentEditingService = null;
+            
+            initDashboard();
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    const tabName = tab.getAttribute('data-tab');
+                    document.getElementById(`${tabName}-tab`).classList.add('active');
+                    
+                    if (tabName === 'services-assignment') {
+                        renderAssignedServices();
+                    }
+                });
+            });
+            
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth < 768 && 
+                    !sidebar.contains(e.target) && 
+                    !menuToggle.contains(e.target) &&
+                    sidebar.classList.contains('open')) {
+                    sidebar.classList.remove('open');
+                }
+            });
+            
+            addFacilityBtn.addEventListener('click', () => {
+                facilityModalTitle.textContent = "Tambah Fasilitas Baru";
+                resetFacilityForm();
+                renderServiceCheckboxes();
+                facilityModal.style.display = 'flex';
+            });
+            
+            manageServicesBtn.addEventListener('click', () => {
+                servicesModalTitle.textContent = "Tambah Layanan Baru";
+                resetServiceForm();
+                servicesModal.style.display = 'flex';
+            });
+            
+            closeButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    facilityModal.style.display = 'none';
+                    servicesModal.style.display = 'none';
+                    confirmationModal.style.display = 'none';
+                });
+            });
+            
+            cancelFacilityBtn.addEventListener('click', () => {
+                facilityModal.style.display = 'none';
+                resetFacilityForm();
+            });
+            
+            cancelServiceBtn.addEventListener('click', () => {
+                servicesModal.style.display = 'none';
+                resetServiceForm();
+            });
+            
+            cancelDeleteBtn.addEventListener('click', () => {
+                confirmationModal.style.display = 'none';
+                itemToDelete = null;
+                deleteType = null;
+            });
+            
+            window.addEventListener('click', (e) => {
+                if (e.target === facilityModal) {
+                    facilityModal.style.display = 'none';
+                    resetFacilityForm();
+                }
+                if (e.target === servicesModal) {
+                    servicesModal.style.display = 'none';
+                    resetServiceForm();
+                }
+                if (e.target === confirmationModal) {
+                    confirmationModal.style.display = 'none';
+                    itemToDelete = null;
+                    deleteType = null;
+                }
+            });
+            
+            saveFacilityBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (validateFacilityForm()) {
+                    const selectedServices = getSelectedServices();
+                    
+                    const newFacility = {
+                        id: document.getElementById('facility-id').value,
+                        name: document.getElementById('facility-name').value,
+                        type: document.getElementById('facility-type-modal').value,
+                        address: document.getElementById('facility-address').value,
+                        phone: document.getElementById('facility-phone').value,
+                        email: document.getElementById('facility-email').value,
+                        photo: document.getElementById('facility-photo').value || 'https://via.placeholder.com/150',
+                        description: document.getElementById('facility-description').value,
+                        status: document.getElementById('facility-status-modal').value,
+                        services: selectedServices
+                    };
+                    
+                    if (currentEditingFacility) {
+                        const index = facilities.findIndex(f => f.id === currentEditingFacility.id);
+                        if (index !== -1) {
+                            facilities[index] = newFacility;
+                        }
+                        currentEditingFacility = null;
+                    } else {
+                        facilities.push(newFacility);
+                    }
+                    
+                    renderFacilities();
+                    updateDashboardStats();
+                    populateAssignFacilitySelect();
+                    
+                    alert('Data fasilitas berhasil disimpan!');
+                    facilityModal.style.display = 'none';
+                    resetFacilityForm();
+                }
+            });
+            
+            saveServiceBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (validateServiceForm()) {
+                    const newService = {
+                        id: document.getElementById('service-id').value,
+                        name: document.getElementById('service-name').value,
+                        category: document.getElementById('service-category-modal').value,
+                        description: document.getElementById('service-description').value,
+                        status: document.getElementById('service-status-modal').value
+                    };
+                    
+                    if (currentEditingService) {
+                        const index = services.findIndex(s => s.id === currentEditingService.id);
+                        if (index !== -1) {
+                            services[index] = newService;
+                        }
+                        currentEditingService = null;
+                    } else {
+                        services.push(newService);
+                    }
+                    
+                    renderServices();
+                    renderServiceCheckboxes();
+                    populateAssignServiceSelect();
+                    updateDashboardStats();
+                    
+                    alert('Layanan berhasil disimpan!');
+                    servicesModal.style.display = 'none';
+                    resetServiceForm();
+                }
+            });
+            
+            assignServiceBtn.addEventListener('click', () => {
+                const facilityId = document.getElementById('assign-facility').value;
+                const serviceId = document.getElementById('assign-service').value;
+                
+                if (!facilityId || !serviceId) {
+                    alert('Pilih fasilitas dan layanan terlebih dahulu!');
+                    return;
+                }
+                
+                const facility = facilities.find(f => f.id === facilityId);
+                const service = services.find(s => s.id === serviceId);
+                
+                if (facility && service) {
+                    if (!facility.services.includes(service.name)) {
+                        facility.services.push(service.name);
+                        renderFacilities();
+                        renderAssignedServices();
+                        alert(`Layanan "${service.name}" berhasil ditugaskan ke ${facility.name}`);
+                    } else {
+                        alert(`Layanan "${service.name}" sudah ada di fasilitas ini`);
+                    }
+                }
+            });
+            
+            confirmDeleteBtn.addEventListener('click', () => {
+                if (itemToDelete && deleteType) {
+                    if (deleteType === 'facility') {
+                        const index = facilities.findIndex(f => f.id === itemToDelete.id);
+                        if (index !== -1) {
+                            facilities.splice(index, 1);
+                            renderFacilities();
+                            updateDashboardStats();
+                            populateAssignFacilitySelect();
+                            alert('Fasilitas berhasil dihapus!');
+                        }
+                    } else if (deleteType === 'service') {
+                        const index = services.findIndex(s => s.id === itemToDelete.id);
+                        if (index !== -1) {
+                            facilities.forEach(facility => {
+                                const serviceIndex = facility.services.indexOf(itemToDelete.name);
+                                if (serviceIndex !== -1) {
+                                    facility.services.splice(serviceIndex, 1);
+                                }
+                            });
+                            
+                            services.splice(index, 1);
+                            renderServices();
+                            renderServiceCheckboxes();
+                            populateAssignServiceSelect();
+                            updateDashboardStats();
+                            alert('Layanan berhasil dihapus!');
+                        }
+                    }
+                    confirmationModal.style.display = 'none';
+                    itemToDelete = null;
+                    deleteType = null;
+                }
+            });
+            
+            function validateFacilityForm() {
+                let isValid = true;
+                const name = document.getElementById('facility-name');
+                const id = document.getElementById('facility-id');
+                const type = document.getElementById('facility-type-modal');
+                const address = document.getElementById('facility-address');
+                
+                document.querySelectorAll('.error-message').forEach(msg => {
+                    msg.textContent = '';
+                });
+                
+                if (!name.value.trim()) {
+                    document.getElementById('facilityNameError').textContent = 'Nama fasilitas wajib diisi';
+                    isValid = false;
+                }
+                
+                if (!id.value.trim()) {
+                    document.getElementById('facilityIdError').textContent = 'ID fasilitas wajib diisi';
+                    isValid = false;
+                } else if (!currentEditingFacility && facilities.some(f => f.id === id.value)) {
+                    document.getElementById('facilityIdError').textContent = 'ID fasilitas sudah digunakan';
+                    isValid = false;
+                }
+                
+                if (!type.value) {
+                    document.getElementById('facilityTypeError').textContent = 'Jenis fasilitas wajib dipilih';
+                    isValid = false;
+                }
+                
+                if (!address.value.trim()) {
+                    document.getElementById('facilityAddressError').textContent = 'Alamat wajib diisi';
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+            
+            function validateServiceForm() {
+                let isValid = true;
+                const name = document.getElementById('service-name');
+                const id = document.getElementById('service-id');
+                const category = document.getElementById('service-category-modal');
+                
+                document.querySelectorAll('.error-message').forEach(msg => {
+                    msg.textContent = '';
+                });
+                
+                if (!name.value.trim()) {
+                    document.getElementById('serviceNameError').textContent = 'Nama layanan wajib diisi';
+                    isValid = false;
+                }
+                
+                if (!id.value.trim()) {
+                    document.getElementById('serviceIdError').textContent = 'ID layanan wajib diisi';
+                    isValid = false;
+                } else if (!currentEditingService && services.some(s => s.id === id.value)) {
+                    document.getElementById('serviceIdError').textContent = 'ID layanan sudah digunakan';
+                    isValid = false;
+                }
+                
+                if (!category.value) {
+                    document.getElementById('serviceCategoryError').textContent = 'Kategori wajib dipilih';
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+            
+            function resetFacilityForm() {
+                facilityForm.reset();
+                document.querySelectorAll('.error-message').forEach(msg => {
+                    msg.textContent = '';
+                });
+                currentEditingFacility = null;
+            }
+            
+            function resetServiceForm() {
+                servicesForm.reset();
+                document.querySelectorAll('.error-message').forEach(msg => {
+                    msg.textContent = '';
+                });
+                currentEditingService = null;
+            }
+            
+            globalSearch.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                filterFacilities();
+                filterServices();
+            });
+            
+            facilityTypeFilter.addEventListener('change', filterFacilities);
+            facilityStatusFilter.addEventListener('change', filterFacilities);
+            facilitySearch.addEventListener('input', filterFacilities);
+            
+            function filterFacilities() {
+                const typeValue = facilityTypeFilter.value;
+                const statusValue = facilityStatusFilter.value;
+                const searchTerm = facilitySearch.value.toLowerCase();
+                const globalSearchTerm = globalSearch.value.toLowerCase();
+                
+                const filteredFacilities = facilities.filter(facility => {
+                    const matchesType = !typeValue || facility.type === typeValue;
+                    const matchesStatus = !statusValue || facility.status === statusValue;
+                    const matchesSearch = !searchTerm || 
+                        facility.name.toLowerCase().includes(searchTerm) || 
+                        facility.id.toLowerCase().includes(searchTerm) ||
+                        facility.address.toLowerCase().includes(searchTerm);
+                    const matchesGlobalSearch = !globalSearchTerm || 
+                        facility.name.toLowerCase().includes(globalSearchTerm) || 
+                        facility.id.toLowerCase().includes(globalSearchTerm) ||
+                        facility.address.toLowerCase().includes(globalSearchTerm) ||
+                        facility.type.toLowerCase().includes(globalSearchTerm);
+                    
+                    return matchesType && matchesStatus && matchesSearch && matchesGlobalSearch;
+                });
+                
+                renderFacilities(filteredFacilities);
+            }
+            
+            serviceCategoryFilter.addEventListener('change', filterServices);
+            serviceStatusFilter.addEventListener('change', filterServices);
+            
+            function filterServices() {
+                const categoryValue = serviceCategoryFilter.value;
+                const statusValue = serviceStatusFilter.value;
+                const globalSearchTerm = globalSearch.value.toLowerCase();
+                
+                const filteredServices = services.filter(service => {
+                    const matchesCategory = !categoryValue || service.category === categoryValue;
+                    const matchesStatus = !statusValue || service.status === statusValue;
+                    const matchesGlobalSearch = !globalSearchTerm || 
+                        service.name.toLowerCase().includes(globalSearchTerm) || 
+                        service.id.toLowerCase().includes(globalSearchTerm) ||
+                        service.description.toLowerCase().includes(globalSearchTerm) ||
+                        service.category.toLowerCase().includes(globalSearchTerm);
+                    
+                    return matchesCategory && matchesStatus && matchesGlobalSearch;
+                });
+                
+                renderServices(filteredServices);
+            }
+            
+            notificationIcon.addEventListener('click', function() {
+                alert('Anda memiliki 3 notifikasi baru');
+                notificationBadge.style.display = 'none';
+            });
+            
+            function initDashboard() {
+                renderFacilities();
+                renderServices();
+                updateDashboardStats();
+                populateAssignFacilitySelect();
+                populateAssignServiceSelect();
+                
+                filterFacilities();
+                filterServices();
+            }
+            
+            function renderFacilities(facilitiesToRender = facilities) {
+                const facilitiesList = document.getElementById('facilities-list');
+                facilitiesList.innerHTML = '';
+                
+                if (facilitiesToRender.length === 0) {
+                    facilitiesList.innerHTML = '<p>Tidak ada fasilitas yang ditemukan.</p>';
+                    return;
+                }
+                
+                facilitiesToRender.forEach(facility => {
+                    const facilityCard = document.createElement('div');
+                    facilityCard.className = 'facility-card';
+                    
+                    facilityCard.innerHTML = `
+                        <img src="${facility.photo}" alt="${facility.name}" class="facility-photo" onerror="this.src='https://via.placeholder.com/150?text=No+Photo'">
+                        <div class="facility-info">
+                            <div class="facility-name">${facility.name}</div>
+                            <div class="facility-type">${facility.type}</div>
+                            <div class="status ${facility.status === 'active' ? 'status-active' : 'status-inactive'}">${facility.status === 'active' ? 'Aktif' : 'Tidak Aktif'}</div>
+                            <div class="action-buttons">
+                                <span class="action-btn" data-action="edit" data-id="${facility.id}"><i class="fas fa-edit"></i> Edit</span>
+                                <span class="action-btn delete" data-action="delete" data-id="${facility.id}"><i class="fas fa-trash"></i> Hapus</span>
+                            </div>
+                            <div class="facility-details">
+                                <div class="facility-detail">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>${facility.address}</span>
+                                </div>
+                                <div class="facility-detail">
+                                    <i class="fas fa-phone"></i>
+                                    <span>${facility.phone || '-'}</span>
+                                </div>
+                                <div class="facility-detail">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>${facility.email || '-'}</span>
+                                </div>
+                            </div>
+                            <div class="services-list">
+                                ${facility.services.map(service => `
+                                    <span class="service-tag">
+                                        ${service}
+                                        <button class="remove-service-btn" data-facility="${facility.id}" data-service="${service}">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                    
+                    facilitiesList.appendChild(facilityCard);
+                });
+                
+                document.querySelectorAll('.action-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const action = this.getAttribute('data-action');
+                        const facilityId = this.getAttribute('data-id');
+                        const facility = facilities.find(f => f.id === facilityId);
+                        
+                        if (action === 'edit') {
+                            editFacility(facility);
+                        } else if (action === 'delete') {
+                            deleteFacility(facility);
+                        }
+                    });
+                });
+                
+                document.querySelectorAll('.remove-service-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const facilityId = this.getAttribute('data-facility');
+                        const serviceName = this.getAttribute('data-service');
+                        const facility = facilities.find(f => f.id === facilityId);
+                        
+                        if (facility) {
+                            const serviceIndex = facility.services.indexOf(serviceName);
+                            if (serviceIndex !== -1) {
+                                facility.services.splice(serviceIndex, 1);
+                                renderFacilities();
+                                renderAssignedServices();
+                                alert(`Layanan "${serviceName}" berhasil dihapus dari ${facility.name}`);
+                            }
+                        }
+                    });
+                });
+            }
+            
+            function renderServices(servicesToRender = services) {
+                const servicesBody = document.getElementById('services-body');
+                servicesBody.innerHTML = '';
+                
+                if (servicesToRender.length === 0) {
+                    servicesBody.innerHTML = '<tr><td colspan="6" class="no-data">Tidak ada layanan yang ditemukan.</td></tr>';
+                    return;
+                }
+                
+                servicesToRender.forEach(service => {
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td>${service.id}</td>
+                        <td>${service.name}</td>
+                        <td>${service.category}</td>
+                        <td>${service.description}</td>
+                        <td><span class="status ${service.status === 'active' ? 'status-active' : 'status-inactive'}">${service.status === 'active' ? 'Aktif' : 'Tidak Aktif'}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <span class="action-btn" data-action="edit-service" data-id="${service.id}"><i class="fas fa-edit"></i></span>
+                                <span class="action-btn delete" data-action="delete-service" data-id="${service.id}"><i class="fas fa-trash"></i></span>
+                            </div>
+                        </td>
+                    `;
+                    
+                    servicesBody.appendChild(row);
+                });
+                
+                document.querySelectorAll('#services-body .action-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const action = this.getAttribute('data-action');
+                        const serviceId = this.getAttribute('data-id');
+                        const service = services.find(s => s.id === serviceId);
+                        
+                        if (action === 'edit-service') {
+                            editService(service);
+                        } else if (action === 'delete-service') {
+                            deleteService(service);
+                        }
+                    });
+                });
+            }
+            
+            function renderAssignedServices() {
+                const assignedServices = document.getElementById('assigned-services');
+                const facilityId = document.getElementById('assign-facility').value;
+                
+                if (!facilityId) {
+                    assignedServices.innerHTML = '<p>Pilih fasilitas terlebih dahulu untuk melihat layanan yang ditugaskan.</p>';
+                    return;
+                }
+                
+                const facility = facilities.find(f => f.id === facilityId);
+                if (!facility) return;
+                
+                let html = '<h3>Layanan yang Tersedia di ' + facility.name + '</h3>';
+                
+                if (facility.services.length > 0) {
+                    html += '<div class="services-list">';
+                    facility.services.forEach(service => {
+                        html += `<span class="service-tag">${service}</span>`;
+                    });
+                    html += '</div>';
+                } else {
+                    html += '<p>Belum ada layanan yang ditugaskan untuk fasilitas ini.</p>';
+                }
+                
+                assignedServices.innerHTML = html;
+            }
+            
+            function updateDashboardStats() {
+                document.getElementById('totalFacilities').textContent = facilities.length;
+                
+                const activeFacilities = facilities.filter(f => f.status === 'active').length;
+                document.getElementById('activeFacilities').textContent = activeFacilities;
+                
+                const types = [...new Set(facilities.map(facility => facility.type))];
+                document.getElementById('totalTypes').textContent = types.length;
+                
+                let totalServices = 0;
+                facilities.forEach(facility => {
+                    totalServices += facility.services.length;
+                });
+                document.getElementById('totalServices').textContent = totalServices;
+            }
+            
+            function populateAssignFacilitySelect() {
+                const assignFacilitySelect = document.getElementById('assign-facility');
+                
+                assignFacilitySelect.innerHTML = '<option value="">Pilih Fasilitas</option>';
+                
+                facilities.forEach(facility => {
+                    const option = document.createElement('option');
+                    option.value = facility.id;
+                    option.textContent = `${facility.name} - ${facility.type}`;
+                    assignFacilitySelect.appendChild(option);
+                });
+                
+                assignFacilitySelect.addEventListener('change', renderAssignedServices);
+            }
+            
+            function populateAssignServiceSelect() {
+                const assignServiceSelect = document.getElementById('assign-service');
+                
+                assignServiceSelect.innerHTML = '<option value="">Pilih Layanan</option>';
+                
+                services.forEach(service => {
+                    const option = document.createElement('option');
+                    option.value = service.id;
+                    option.textContent = `${service.name} - ${service.category}`;
+                    assignServiceSelect.appendChild(option);
+                });
+            }
+            
+            function renderServiceCheckboxes() {
+                const servicesCheckboxes = document.getElementById('facility-services-checkboxes');
+                servicesCheckboxes.innerHTML = '';
+                
+                services.forEach(service => {
+                    const checkbox = document.createElement('div');
+                    checkbox.className = 'day-checkbox';
+                    
+                    const isChecked = currentEditingFacility && 
+                        currentEditingFacility.services.includes(service.name);
+                    
+                    checkbox.innerHTML = `
+                        <input type="checkbox" id="service-${service.id}" ${isChecked ? 'checked' : ''}>
+                        <label for="service-${service.id}">${service.name}</label>
+                    `;
+                    
+                    servicesCheckboxes.appendChild(checkbox);
+                });
+            }
+            
+            function getSelectedServices() {
+                const selectedServices = [];
+                const checkboxes = document.querySelectorAll('#facility-services-checkboxes input[type="checkbox"]');
+                
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        const serviceId = checkbox.id.replace('service-', '');
+                        const service = services.find(s => s.id === serviceId);
+                        if (service) {
+                            selectedServices.push(service.name);
+                        }
+                    }
+                });
+                
+                return selectedServices;
+            }
+            
+            function editFacility(facility) {
+                facilityModalTitle.textContent = "Edit Data Fasilitas";
+                document.getElementById('facility-name').value = facility.name;
+                document.getElementById('facility-id').value = facility.id;
+                document.getElementById('facility-id').disabled = true;
+                document.getElementById('facility-type-modal').value = facility.type;
+                document.getElementById('facility-status-modal').value = facility.status;
+                document.getElementById('facility-address').value = facility.address;
+                document.getElementById('facility-phone').value = facility.phone || '';
+                document.getElementById('facility-email').value = facility.email || '';
+                document.getElementById('facility-photo').value = facility.photo;
+                document.getElementById('facility-description').value = facility.description || '';
+                
+                currentEditingFacility = facility;
+                
+                renderServiceCheckboxes();
+                
+                facilityModal.style.display = 'flex';
+            }
+            
+            function editService(service) {
+                servicesModalTitle.textContent = "Edit Layanan Kesehatan";
+                document.getElementById('service-name').value = service.name;
+                document.getElementById('service-id').value = service.id;
+                document.getElementById('service-id').disabled = true;
+                document.getElementById('service-category-modal').value = service.category;
+                document.getElementById('service-status-modal').value = service.status;
+                document.getElementById('service-description').value = service.description || '';
+                
+                currentEditingService = service;
+                
+                servicesModal.style.display = 'flex';
+            }
+            
+            function deleteFacility(facility) {
+                itemToDelete = facility;
+                deleteType = 'facility';
+                confirmationModalTitle.textContent = "Konfirmasi Penghapusan Fasilitas";
+                confirmationText.textContent = `Apakah Anda yakin ingin menghapus ${facility.name}?`;
+                confirmationModal.style.display = 'flex';
+            }
+            
+            function deleteService(service) {
+                itemToDelete = service;
+                deleteType = 'service';
+                confirmationModalTitle.textContent = "Konfirmasi Penghapusan Layanan";
+                confirmationText.textContent = `Apakah Anda yakin ingin menghapus layanan ${service.name}?`;
+                confirmationModal.style.display = 'flex';
+            }
+            
+            function checkWidth() {
+                if (window.innerWidth < 768) {
+                    sidebar.classList.remove('open');
+                } else {
+                    sidebar.classList.add('open');
+                }
+            }
+            
+            checkWidth();
+            
+            window.addEventListener('resize', checkWidth);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,948 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Layanan Kesehatan — Daftar Dokter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --teal-900: #088f83;
+      --teal-800: #0da99f;
+      --teal-700: #12c0a7;
+      --teal-600: #2dd4bf;
+      --teal-500: #14b8a6;
+      --bg: #f8fafc;
+      --muted:#64748b;
+      --card:#ffffff;
+      --shadow: 0 8px 30px rgba(2,6,23,0.08);
+      --radius:14px;
+    }
+
+    html{ scroll-behavior: smooth; }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background: linear-gradient(90deg,#0ea5a0 0%, #2dd4bf 100%);
+      color:#0f172a;
+    }
+
+    .topbar {
+      background: linear-gradient(90deg, #049f94 0%, #12c0a7 100%);
+      color: #fff;
+      padding: 14px 24px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+    .topbar .left { display:flex; align-items:center; gap:14px; }
+    .logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:white; }
+    .logo .logo-icon{ width:44px; height:44px; border-radius:10px; background:rgba(255,255,255,0.18); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .logo h1{ font-family:Poppins, Inter; font-size:16px; margin:0; line-height:1; font-weight:700; }
+    .logo p{ margin:0; font-size:12px; opacity:0.95; line-height:1; color:rgba(255,255,255,0.95); }
+
+    .topbar .right{ display:flex; align-items:center; gap:12px; }
+    .top-item { display:flex; align-items:center; gap:8px; background: rgba(255,255,255,0.06); padding:8px 12px; border-radius:10px; cursor:pointer; font-size:14px; color:#fff; }
+    .top-item .small { font-size:12px; opacity:0.95; }
+    .topbar .login-btn{ background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.12); color: white; padding:8px 12px; border-radius:8px; font-weight:600; }
+
+    .navbar {
+      background:white;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:14px 24px;
+      box-shadow: 0 4px 20px rgba(2,6,23,0.06);
+      position:sticky;
+      top:0;
+      z-index:60;
+    }
+    .nav-links{ display:flex; gap:18px; align-items:center; transition: 0.5s; }
+    .nav-links a { text-decoration:none; color:#0f172a; padding:8px 10px; font-weight:600; border-radius:8px; transition: background-color 0.2s; }
+    .nav-links a:hover{ background: rgba(2,6,23,0.03); }
+    .search-area{ display:flex; align-items:center; gap:8px; }
+    .search-area input[type="search"]{ border:1px solid #e6eef0; padding:10px 14px; border-radius:10px; min-width:260px; outline:none; font-size:14px; box-shadow: none; transition: border-color 0.2s; }
+    .search-area input[type="search"]:focus { border-color: var(--teal-600); }
+    .search-area button{ background:transparent; border:none; cursor:pointer; padding:8px; }
+    .menu-toggle{ display:none; background:transparent; border:none; cursor:pointer; padding:8px; }
+
+    .page-container {
+      max-width: 1200px;
+      margin: 28px auto 80px;
+      padding: 28px 24px 60px;
+      background-color: #f5fdff;
+      border-radius: 12px;
+      box-shadow: 0 8px 26px rgba(2,6,23,0.06);
+      min-height: 60vh;
+    }
+
+    h2 { font-family:Poppins,Inter; color:#0b2a2a; margin:0 0 8px 0; }
+    p.lead { margin:0 0 10px 0; color:#475569; }
+
+    .dokter-list-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
+      margin-top: 20px;
+    }
+    .dokter-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 10px 25px rgba(2,6,23,0.06);
+      transition: transform .18s ease, box-shadow .18s ease;
+      display:flex;
+      flex-direction:column;
+      height:100%;
+    }
+    .dokter-card:hover { transform: translateY(-6px); box-shadow: 0 18px 36px rgba(2,6,23,0.12); }
+    .dokter-photo { width:100%; height:170px; border-radius:10px; object-fit:cover; margin-bottom:12px; }
+    .dokter-info h4 { margin:0;font-size:18px;font-weight:700;color:#0b2730; }
+    .dokter-info p { margin:4px 0;color:#5b6b6b;font-size:14px; }
+    .dokter-actions { margin-top:auto; display:flex; gap:10px; }
+    .btn-jadwal, .btn-janji {
+      padding:10px 12px;border-radius:10px;font-weight:700;border:none;cursor:pointer;font-size:14px;width:50%;
+    }
+    .btn-jadwal { background:#f1fffc;color:var(--teal-700); border:1px solid var(--teal-600); }
+    .btn-janji { background:var(--teal-600); color:white; }
+
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(2,6,23,0.45); display:none; align-items:center; justify-content:center; z-index:1200; opacity:0; pointer-events:none; transition: opacity .18s ease;
+    }
+    .modal-overlay.show { opacity:1; pointer-events:all; display:flex; }
+    .modal-box { width:640px; max-width:94%; background:#fff; border-radius:12px; padding:18px; box-shadow:0 24px 48px rgba(3,10,12,0.18); transform: translateY(12px); transition: transform 0.58s ease; }
+    .modal-overlay.show .modal-box { transform: translateY(0); }
+
+    .slot-grid { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+    .slot { padding:8px 12px; border-radius:10px; border:1px solid #e6f3ef; background:#f8fffb; color:#0b2730; font-weight:700; cursor:pointer; }
+    .slot.booked { background:#ffecec; border-color:#ffd6d6; opacity:0.6; cursor:not-allowed; text-decoration:line-through; }
+
+    .form-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+    .form-row .col { flex:1; min-width:140px; }
+    input[type="text"], input[type="email"], input[type="tel"], input[type="date"], select {
+      width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e6eef0; outline:none;
+    }
+    .btn-primary {
+      background: var(--teal-600); color:white; border:none; padding:10px 14px; border-radius:10px; font-weight:700; cursor:pointer;
+    }
+
+    .site-footer {
+      background: linear-gradient(90deg, var(--teal-700) 0%, var(--teal-500) 100%);
+      color: white;
+      padding: 48px 0 28px;
+      margin-top:28px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .footer-left {
+      max-width: 380px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .footer-brand h3 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .footer-brand p {
+      margin: 0;
+      font-size: 13px;
+      opacity: .9;
+    }
+
+    .footer-desc {
+      margin: 0 0 18px;
+      line-height: 1.6;
+      opacity: .95;
+    }
+
+    .footer-contact {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-contact li {
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: .95;
+    }
+
+    .footer-newsletter h4 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .footer-newsletter p {
+      margin: 0 0 16px;
+      opacity: .9;
+    }
+
+    .newsletter-input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 12px;
+    }
+
+    .footer-newsletter .newsletter-btn {
+      background:#ffffff !important;
+      color: #0b2730 !important;
+      border: none !important;
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(2,6,23,0.08) !important;
+      transition: all 0.15s ease;
+    }
+
+    .footer-newsletter .newsletter-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(2,6,23,0.12) !important;
+    }
+
+    .social a {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 10px 12px;
+      border-radius: 10px;
+      margin-right: 8px;
+      display: inline-flex;
+    }
+
+    .footer-bottom {
+      margin-top: 30px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-bottom p {
+      margin: 0;
+      opacity: .9;
+    }
+
+    .footer-bottom a {
+      color: white;
+      opacity: .9;
+      text-decoration: none;
+      margin-left: 16px;
+    }
+
+    .footer-bottom a:hover {
+      text-decoration: underline;
+    }
+
+    #newsletter-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(3px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+    }
+
+    #newsletter-modal.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #newsletter-modal .modal-box {
+      background: #ffffff;
+      padding: 26px 28px;
+      width: 360px;
+      max-width: 90%;
+      border-radius: 14px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      transform: translateY(20px);
+      transition: transform .25s ease;
+      color: var(--teal-500);
+    }
+
+    #newsletter-modal.show .modal-box {
+      transform: translateY(0);
+    }
+
+    #newsletter-modal #close-newsletter-modal {
+      margin-top: 16px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      background: var(--teal-600, #14b8a6);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s, transform .2s;
+    }
+
+    #newsletter-modal #close-newsletter-modal:hover {
+      background: var(--teal-700, #0da99f);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width:1024px){
+      .search-area input[type="search"]{ min-width:200px }
+    }
+
+    @media (max-width:900px){ 
+      .menu-toggle{ display:block } 
+      .nav-links{ 
+        display:none; 
+        position:absolute; 
+        left:0; 
+        top:68px; 
+        right:0; 
+        background:white; 
+        flex-direction:column; 
+        padding:16px 20px; 
+        gap:8px; 
+        box-shadow:0 12px 40px rgba(2,6,23,0.08); 
+        border-bottom-left-radius:12px; 
+        border-bottom-right-radius:12px; 
+      } 
+      .nav-links.show{ display:flex } 
+      .navbar{ padding:12px 16px; position:sticky; top:56px; }
+      .modal-box{ width:94%; } 
+    }
+    @media (max-width:640px){ 
+      .topbar {
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px 16px;
+      }
+      .topbar .left, .topbar .right {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .topbar .right {
+        justify-content: flex-end;
+      }
+      .navbar {
+        flex-wrap: wrap;
+      }
+      .search-area {
+        order: 3;
+        width: 100%;
+        margin-top: 12px;
+      }
+      .search-area input[type="search"] {
+        flex: 1;
+        min-width: auto;
+      }
+      .dokter-photo{ height:150px } 
+      .modal-box{ padding:14px } 
+      .dokter-actions { flex-direction: column; }
+      .dokter-actions button { width: 100%; }
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+      .footer-bottom a {
+        margin: 0 8px;
+      }
+    }
+    @media (max-width:480px){
+      .logo h1{ font-size:14px }
+      .logo p{ font-size:11px }
+      .search-area input[type="search"]{ min-width:120px; padding:8px 10px }
+      .top-item span:not(.small) {
+        font-size: 13px;
+      }
+      .top-item .small {
+        font-size: 11px;
+      }
+      .topbar .login-btn {
+        padding: 6px 10px;
+        font-size: 13px;
+      }
+    }
+
+    .sr-only{ position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0 }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div class="left">
+        <a href="index.html" class="logo" aria-label="Layanan Kesehatan - Beranda">
+          <span class="logo-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="white" stroke-opacity="0.9" stroke-width="1.6" /><path d="M7 9h3l1 1h6" stroke="white" stroke-opacity="0.9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <div>
+            <h1>Layanan Kesehatan</h1>
+            <p>Republik Indonesia</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="right">
+        <div class="top-item" id="locationToggle" aria-haspopup="true" aria-expanded="false" role="button" tabindex="0">
+          <img src="location.png" alt="" style="width: 16px; height: 16px;">
+          <div>
+            <div style="font-weight:700">Jakarta, DKI Jakarta</div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="white" stroke-opacity="0.95" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </div>
+
+        <div class="top-item" title="Telepon">
+          <img src="telephone.png" alt="" style="width: 16px; height: 16px;">
+          <div>
+            <a href="tel:119" style="cursor: pointer; text-decoration: none; color: inherit;">
+              <div class="small">119</div>
+              <div style="font-weight:600; font-size:13px;">Telepon</div>
+            </a>
+          </div>
+        </div>
+
+        <div class="top-item" title="Bahasa">
+          <div style="font-weight:700">ID</div>
+        </div>
+
+        <button class="login-btn" aria-label="Login">Login</button>
+      </div>
+    </div>
+
+    <nav class="navbar" role="navigation" aria-label="Utama">
+      <button class="menu-toggle" id="menuToggle" aria-label="Buka menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="#0f172a" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+
+      <div style="display:flex;align-items:center;gap:18px">
+        <div class="nav-links" id="navLinks">
+          <a href="index.html">Beranda</a>
+          <a href="index.html#services">Layanan</a>
+          <a href="#">Fasilitas Kesehatan</a>
+          <a href="#">Informasi</a>
+          <a href="#">Kontak</a>
+        </div>
+      </div>
+
+      <div class="search-area" role="search" aria-label="Pencarian layanan kesehatan">
+        <input type="search" placeholder="Cari layanan kesehatan..." aria-label="Cari layanan kesehatan">
+        <button aria-label="Cari">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35" stroke="#0f172a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="11" r="6" stroke="#0f172a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="page-container" role="main" aria-label="Konten Utama">
+    <div style="max-width:1200px;margin:0 auto;padding:0 12px;">
+      <h2>Daftar Dokter</h2>
+      <p class="lead">Temukan dokter berdasarkan spesialisasi. Klik "Cek Jadwal" untuk lihat jam praktik atau "Buat Janji" untuk memesan.</p>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;align-items:center">
+        <input id="searchDoctor" type="search" placeholder="Cari nama..." style="padding:10px 12px;border-radius:10px;border:1px solid #dbe7e7;min-width:220px;">
+        <select id="filterSpecialty" style="padding:10px 12px;border-radius:10px;border:1px solid #dbe7e7;">
+          <option value="">Semua Spesialis</option>
+        </select>
+      </div>
+
+      <div id="doctorListGrid" class="dokter-list-grid" style="margin-top:18px;"></div>
+    </div>
+  </main>
+
+  <div id="schedModal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="schedTitle">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+        <div>
+          <h3 id="schedTitle" style="margin:0 0 6px;font-family:Poppins,Inter;">Jadwal Dokter</h3>
+          <div id="schedMeta" style="color:#51606a;font-size:14px;"></div>
+        </div>
+        <button id="closeSchedModal" aria-label="Tutup" style="background:transparent;border:none;font-size:20px;cursor:pointer;">✕</button>
+      </div>
+
+      <hr style="border:none;border-top:1px solid #eef2f2;margin:12px 0;">
+
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+        <label for="pickDate" style="font-weight:600;color:#32484b;">Pilih tanggal:</label>
+        <input id="pickDate" type="date" style="padding:8px 12px;border-radius:8px;border:1px solid #dbe7e7;">
+        <div id="weekdayLabel" style="margin-left:auto;color:#6b7b7b;font-size:14px;"></div>
+      </div>
+
+      <div id="slotsArea" style="margin-top:12px;"></div>
+      <div id="noSlots" style="display:none;margin-top:12px;color:#6b7b7b;">Tidak ada jadwal pada tanggal ini.</div>
+    </div>
+  </div>
+
+  <div id="apptModal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="apptTitle">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <h3 id="apptTitle" style="margin:0 0 6px;font-family:Poppins,Inter;">Buat Janji</h3>
+          <div id="apptMeta" style="color:#51606a;font-size:14px;"></div>
+        </div>
+        <button id="closeApptModal" aria-label="Tutup" style="background:transparent;border:none;font-size:20px;cursor:pointer;">✕</button>
+      </div>
+
+      <hr style="border:none;border-top:1px solid #eef2f2;margin:12px 0;">
+
+      <div>
+        <label style="font-weight:600;color:#32484b;">Pilih tanggal</label>
+        <input id="apptDate" type="date" style="margin-top:6px;padding:10px 12px;border-radius:8px;border:1px solid #dbe7e7;width:100%;">
+      </div>
+
+      <div style="margin-top:10px;">
+        <label style="font-weight:600;color:#32484b;">Pilih jam (jika tersedia)</label>
+        <select id="apptTime" style="margin-top:6px;padding:10px;border-radius:8px;border:1px solid #dbe7e7;width:100%;">
+          <option value="">Pilih waktu</option>
+        </select>
+      </div>
+
+      <div class="form-row" style="margin-top:12px;">
+        <div class="col"><input id="apptName" type="text" placeholder="Nama lengkap" style="padding:10px 12px;border-radius:8px;border:1px solid #dbe7e7;width:100%;" /></div>
+        <div class="col"><input id="apptPhone" type="tel" placeholder="Telepon" style="padding:10px 12px;border-radius:8px;border:1px solid #dbe7e7;width:100%;" /></div>
+      </div>
+
+      <div style="margin-top:10px;"><input id="apptEmail" type="email" placeholder="Email (opsional)" style="padding:10px 12px;border-radius:8px;border:1px solid #dbe7e7;width:100%;" /></div>
+
+      <div style="display:flex;gap:10px;margin-top:12px;justify-content:flex-end;">
+        <button id="saveApptBtn" class="btn-primary">Simpan Janji</button>
+        <button id="cancelApptBtn" style="background:#f3f4f6;border:none;padding:10px 12px;border-radius:8px;cursor:pointer;">Batal</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="footer-container">
+    <footer class="site-footer" role="contentinfo">
+      <div class="footer-inner">
+        <div class="footer-top">
+          <div class="footer-left">
+            <div class="footer-brand">
+              <div class="footer-logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                  <rect x="3" y="5" width="18" height="14" rx="2" stroke="white" stroke-opacity="0.9" stroke-width="1.6"/>
+                  <path d="M7 9h3l1 1h6" stroke="white" stroke-opacity="0.9" stroke-width="1.6"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div>
+                <h3>Layanan Kesehatan</h3>
+                <p>Republik Indonesia</p>
+              </div>
+            </div>
+
+            <p class="footer-desc">
+              Platform kesehatan digital terpercaya yang menghubungkan masyarakat dengan
+              fasilitas kesehatan terbaik di seluruh Indonesia.
+            </p>
+
+            <ul class="footer-contact">
+              <li>
+                <a href="tel:119" style="text-decoration: none; cursor: pointer; color: inherit;">
+                  <img src="telephone.png" alt="" style="width: 16px; height: 16px;">
+                  119 (Darurat)
+                </a>
+              </li>
+              <li>
+                <img src="mail.png" alt="" style="width: 24px; height: 24px;">
+                info@kesehatan.go.id
+              </li>
+              <li>
+                <img src="location.png" alt="" style="width: 24px; height: 24px;">
+                Jakarta, Indonesia
+              </li>
+            </ul>
+          </div>
+
+          <div class="footer-newsletter">
+            <h4>Newsletter</h4>
+            <p>Dapatkan informasi terbaru seputar kesehatan dan program pemerintah</p>
+
+            <input type="email" placeholder="Email Anda" class="newsletter-input" id="newsletter-email">
+            <button class="newsletter-btn" id="newsletter-btn">Berlangganan</button>
+
+            <div class="social" style="margin-top: 16px;">
+              <a href="#" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+              <a href="#" aria-label="Twitter"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg></a>
+              <a href="#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+              <a href="#" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>© 2024 Kementerian Kesehatan Republik Indonesia.</p>
+          <div class="policies">
+            <a href="#">Kebijakan Privasi</a>
+            <a href="#">Syarat & Ketentuan</a>
+            <a href="#">Aksesibilitas</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </section>
+
+  <div id="newsletter-modal" class="modal-overlay">
+    <div class="modal-box">
+      <h3>Berlangganan Berhasil!</h3>
+      <p>Nantikan info seputar kesehatan dari kami ya! 😊</p>
+      <button id="close-newsletter-modal">OK</button>
+    </div>
+  </div>
+
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    menuToggle && menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('show');
+      menuToggle.setAttribute('aria-expanded', navLinks.classList.contains('show'));
+    });
+
+    document.addEventListener('click', (e) => {
+      if(window.innerWidth <= 900){
+        if(!navLinks.contains(e.target) && !menuToggle.contains(e.target)){
+          navLinks.classList.remove('show');
+        }
+      }
+    });
+
+    const locationToggle = document.getElementById('locationToggle');
+    locationToggle && locationToggle.addEventListener('click', () => {
+      const expanded = locationToggle.getAttribute('aria-expanded') === 'true';
+      locationToggle.setAttribute('aria-expanded', !expanded);
+      setTimeout(() => {
+        const choice = prompt('Ganti lokasi (contoh: Bandung, Jawa Barat):','Jakarta, DKI Jakarta');
+        if(choice) {
+          locationToggle.querySelector('div > div').textContent = choice;
+        }
+      }, 120);
+    });
+
+    const DOCTORS = [
+      {
+        id: 'd1',
+        name: 'dr. Siti Aminah',
+        specialty: 'Dokter Umum',
+        photo: 'https://cdn-1.timesmedia.co.id/images/2025/01/18/dr.-Novita-Qurrota-Aini.jpg',
+        schedule: { mon:['09:00','10:00','11:00'], wed:['13:00','14:00'], fri:['09:00','10:30'] }
+      },
+      {
+        id: 'd2',
+        name: 'dr. Adi Pratama',
+        specialty: 'Pediatri',
+        photo: 'https://awsimages.detik.net.id/community/media/visual/2017/10/13/cba7b68a-c95b-46b5-a2e6-66ba7449cfd7_43.jpeg?w=600&q=90',
+        schedule: { tue:['08:30','09:30','10:30'], thu:['08:30','10:00'], sat:['09:00'] }
+      },
+      {
+        id: 'd3',
+        name: 'dr. Maya Lestari',
+        specialty: 'Kebidanan & Kandungan',
+        photo: 'https://mployee.id/wp-content/uploads/2021/11/profesi-dokter.jpg',
+        schedule: { mon:['14:00','15:00'], wed:['14:00'], fri:['08:00','09:00'] }
+      },
+      {
+        id: 'd4',
+        name: 'dr. Rudi Hartono',
+        specialty: 'Gigi',
+        photo: 'https://cdn-assets-eu.frontify.com/s3/frontify-enterprise-files-eu/eyJwYXRoIjoiaWhoLWhlYWx0aGNhcmUtYmVyaGFkXC9hY2NvdW50c1wvYzNcLzQwMDA2MjRcL3Byb2plY3RzXC8yMDlcL2Fzc2V0c1wvOTNcLzM4MTA2XC8wZjdhMmE0MzQwZjBhNGQ4YmQzYTM4MzQ4OWU1NjNjNi0xNjU4MzAxMDMwLmpwZyJ9:ihh-healthcare-berhad:nYMJB5LuuXfSBJcG-_Q0t1kYGwm69-ssAPGgKRYpLHM?format=webp',
+        schedule: { tue:['11:00','12:00'], thu:['11:00','13:00'], sat:['10:00','11:30'] }
+      },
+      {
+        id: 'd5',
+        name: 'dr. Lina Kusuma',
+        specialty: 'Psikologi Klinis',
+        photo: 'https://rsuii.co.id/backend/uploads/mediamanager/16Dec2024084732-Dokter%20Anggia,%20Sp.PD.jpg',
+        schedule: { mon:['09:00','10:00'], wed:['09:00','10:30'], thu:['15:00'] }
+      },
+      {
+        id: 'd6', 
+        name: 'dr. Ahmad Fauzi',
+        specialty: 'Bedah',
+        photo: 'https://cloud.jpnn.com/photo/arsip/normal/2023/05/26/nicho-saputra-nugraha-influencer-sekaligus-dokter-ganteng-ya-fbox.jpg', 
+        schedule: { tue:['08:00','10:00'], thu:['13:00','15:00'], sat:['09:00','11:00'] }
+      },
+      {
+        id: 'd7',
+        name: 'dr. Diana Putri',
+        specialty: 'Kulit',
+        photo: 'https://api.ruangmenyala.com/api/uploads/on-c2-s3-ruangmenyala-prod/572f0d10-a0d2-4597-a3b2-5d1b72abb294/159fd2a8fdb8f1e96850f6b0ca58a831e0043e287616d247155d58702208bd9b.jpg',
+        schedule: { mon:['10:00','12:00'], wed:['14:00','16:00'], fri:['10:00','12:00'] }
+      }
+    ];
+
+    const WK = ['sun','mon','tue','wed','thu','fri','sat'];
+    function getWeekKeyFromDateInput(dateStr) {
+      if(!dateStr) return null;
+      const d = new Date(dateStr + 'T00:00:00');
+      return WK[d.getDay()];
+    }
+
+    (function populateSpecialties(){
+      const sel = document.getElementById('filterSpecialty');
+      const specs = [...new Set(DOCTORS.map(d => d.specialty))].sort();
+      specs.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s; opt.textContent = s;
+        sel.appendChild(opt);
+      });
+    })();
+
+    const doctorGrid = document.getElementById('doctorListGrid');
+    const searchInput = document.getElementById('searchDoctor');
+    const filterSpec = document.getElementById('filterSpecialty');
+
+    function renderDoctors(q = '', specialty = '') {
+      doctorGrid.innerHTML = '';
+      const term = (q||'').trim().toLowerCase();
+      const items = DOCTORS.filter(d => {
+        if(specialty) if(d.specialty !== specialty) return false;
+        if(!term) return true;
+        return d.name.toLowerCase().includes(term) || (d.clinic && d.clinic.toLowerCase().includes(term));
+      });
+      if(items.length === 0) {
+        doctorGrid.innerHTML = '<div style="padding:18px;color:#64748b">Dokter tidak ditemukan.</div>';
+        return;
+      }
+      items.forEach(d => {
+        const el = document.createElement('article');
+        el.className = 'dokter-card';
+        el.innerHTML = `
+          <img class="dokter-photo" src="${escapeHtml(d.photo)}" alt="${escapeHtml(d.name)}">
+          <div class="dokter-info">
+            <h4>${escapeHtml(d.name)}</h4>
+            <p>${escapeHtml(d.specialty)}</p>
+            <p style="font-size:13px;color:#64748b;">${escapeHtml(d.clinic)}</p>
+          </div>
+          <div class="dokter-actions">
+            <button class="btn-jadwal" data-id="${d.id}">Cek Jadwal</button>
+            <button class="btn-janji" data-id="${d.id}">Buat Janji</button>
+          </div>
+        `;
+        doctorGrid.appendChild(el);
+      });
+    }
+
+    renderDoctors();
+
+    searchInput.addEventListener('input', () => renderDoctors(searchInput.value, filterSpec.value));
+    filterSpec.addEventListener('change', () => renderDoctors(searchInput.value, filterSpec.value));
+
+    const schedModal = document.getElementById('schedModal');
+    const closeSchedModal = document.getElementById('closeSchedModal');
+    const pickDate = document.getElementById('pickDate');
+    const schedMeta = document.getElementById('schedMeta');
+    const slotsArea = document.getElementById('slotsArea');
+    const noSlots = document.getElementById('noSlots');
+    const weekdayLabel = document.getElementById('weekdayLabel');
+    let currentDoctor = null;
+
+    document.addEventListener('click', (e) => {
+      const b = e.target.closest('.btn-jadwal');
+      if(!b) return;
+      const id = b.dataset.id;
+      openSchedule(id);
+    });
+
+    function openSchedule(docId) {
+      const doc = DOCTORS.find(x => x.id === docId);
+      if(!doc) return;
+      currentDoctor = doc;
+      document.getElementById('schedTitle').textContent = `Jadwal ${doc.name}`;
+      schedMeta.textContent = `${doc.specialty} · ${doc.clinic}`;
+      const today = new Date();
+      pickDate.value = today.toISOString().split('T')[0];
+      renderSlotsForDate(pickDate.value);
+      schedModal.classList.add('show');
+    }
+
+    function hideSchedModal() {
+      schedModal.classList.remove('show');
+      slotsArea.innerHTML = '';
+      noSlots.style.display = 'none';
+      currentDoctor = null;
+    }
+
+    closeSchedModal.addEventListener('click', hideSchedModal);
+    schedModal.addEventListener('click', (e)=> { if(e.target === schedModal) hideSchedModal(); });
+    document.addEventListener('keydown', (e)=> { if(e.key === 'Escape' && schedModal.classList.contains('show')) hideSchedModal(); });
+
+    pickDate.addEventListener('change', (e) => renderSlotsForDate(e.target.value));
+
+    function renderSlotsForDate(dateStr) {
+      slotsArea.innerHTML = '';
+      noSlots.style.display = 'none';
+      weekdayLabel.textContent = '';
+      if(!currentDoctor) return;
+      const wk = getWeekKeyFromDateInput(dateStr);
+      weekdayLabel.textContent = wk ? wk.toUpperCase() : '';
+      const slots = (currentDoctor.schedule && currentDoctor.schedule[wk]) || [];
+      if(!slots || slots.length === 0) { noSlots.style.display = 'block'; return; }
+      const grid = document.createElement('div'); grid.className = 'slot-grid';
+      slots.forEach(time => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'slot';
+        btn.textContent = time;
+        btn.dataset.time = time;
+        if(isSlotBooked(currentDoctor.id, dateStr, time)) {
+          btn.classList.add('booked'); btn.disabled = true; btn.title = 'Sudah dibooking';
+        } else {
+          btn.addEventListener('click', ()=> {
+            const proceed = confirm(`Booking ${currentDoctor.name}\nTanggal: ${dateStr}\nJam: ${time}\n\nLanjutkan booking?`);
+            if(!proceed) return;
+            openApptModal(currentDoctor.id, dateStr, time, true);
+          });
+        }
+        grid.appendChild(btn);
+      });
+      slotsArea.appendChild(grid);
+    }
+
+    const BOOK_KEY = 'lk_bookings_v1';
+    function getBookings(){ try{ const r = localStorage.getItem(BOOK_KEY); return r ? JSON.parse(r) : []; }catch(e){return [];} }
+    function saveBookings(arr){ localStorage.setItem(BOOK_KEY, JSON.stringify(arr)); }
+    function isSlotBooked(docId, dateStr, time){ const b = getBookings(); return b.some(x=>x.docId===docId && x.date===dateStr && x.time===time); }
+
+    const apptModal = document.getElementById('apptModal');
+    const closeApptModal = document.getElementById('closeApptModal');
+    const apptMeta = document.getElementById('apptMeta');
+    const apptDate = document.getElementById('apptDate');
+    const apptTime = document.getElementById('apptTime');
+    const apptName = document.getElementById('apptName');
+    const apptPhone = document.getElementById('apptPhone');
+    const apptEmail = document.getElementById('apptEmail');
+    const saveApptBtn = document.getElementById('saveApptBtn');
+    const cancelApptBtn = document.getElementById('cancelApptBtn');
+
+    let apptDoctor = null;
+    let apptPrefTime = '';
+
+    document.addEventListener('click', (e)=>{
+      const b = e.target.closest('.btn-janji');
+      if(!b) return;
+      const id = b.dataset.id;
+      openApptModal(id, null, null, false);
+    });
+
+    function openApptModal(docId, preDate=null, preTime=null, calledFromSched=false) {
+      const doc = DOCTORS.find(x=>x.id===docId);
+      if(!doc) return;
+      apptDoctor = doc;
+      document.getElementById('apptTitle').textContent = `Buat Janji dengan ${doc.name}`;
+      apptMeta.textContent = `${doc.specialty} · ${doc.clinic}`;
+      const d = preDate ? new Date(preDate + 'T00:00:00') : new Date();
+      apptDate.value = d.toISOString().split('T')[0];
+      apptPrefTime = preTime || '';
+      populateApptTimes(apptDate.value);
+      if(apptPrefTime){
+        apptTime.value = apptPrefTime;
+      } else {
+        apptTime.value = '';
+      }
+      apptName.value = '';
+      apptPhone.value = '';
+      apptEmail.value = '';
+      apptModal.classList.add('show');
+      apptModal.dataset.fromSched = calledFromSched ? '1' : '0';
+    }
+
+    function hideApptModal() {
+      apptModal.classList.remove('show');
+      apptDoctor = null;
+    }
+
+    closeApptModal.addEventListener('click', hideApptModal);
+    cancelApptBtn.addEventListener('click', hideApptModal);
+    apptModal.addEventListener('click', (e)=> { if(e.target === apptModal) hideApptModal(); });
+    document.addEventListener('keydown', (e)=> { if(e.key==='Escape' && apptModal.classList.contains('show')) hideApptModal(); });
+
+    apptDate.addEventListener('change', (e)=> populateApptTimes(e.target.value));
+
+    function populateApptTimes(dateStr) {
+      apptTime.innerHTML = '<option value="">Pilih waktu</option>';
+      if(!apptDoctor) return;
+      const wk = getWeekKeyFromDateInput(dateStr);
+      const slots = (apptDoctor.schedule && apptDoctor.schedule[wk]) || [];
+      if(!slots || slots.length===0) {
+        const opt = document.createElement('option'); opt.value=''; opt.textContent = 'Tidak ada slot pada tanggal ini'; apptTime.appendChild(opt); return;
+      }
+      slots.forEach(t => {
+        const opt = document.createElement('option'); opt.value = t; opt.textContent = t;
+        if(isSlotBooked(apptDoctor.id, dateStr, t)) { opt.disabled = true; opt.textContent += ' (sudah dibooking)'; }
+        apptTime.appendChild(opt);
+      });
+    }
+
+    saveApptBtn.addEventListener('click', ()=>{
+      const name = (apptName.value||'').trim();
+      const phone = (apptPhone.value||'').trim();
+      const date = apptDate.value;
+      const time = apptTime.value;
+      if(!apptDoctor){ alert('Dokter tidak dipilih'); return; }
+      if(!name || !phone || !date || !time){ alert('Mohon isi semua data (nama, telepon, tanggal, jam).'); return; }
+      const bookings = getBookings();
+      if(isSlotBooked(apptDoctor.id, date, time)){ alert('Maaf, slot sudah dibooking. Pilih slot lain.'); populateApptTimes(date); return; }
+      bookings.push({ docId: apptDoctor.id, docName: apptDoctor.name, date, time, name, phone, email: (apptEmail.value||''), createdAt: new Date().toISOString() });
+      saveBookings(bookings);
+      alert('Janji berhasil disimpan — data tersimpan di browser (demo).');
+      hideApptModal();
+      if(schedModal.classList.contains('show') && currentDoctor && currentDoctor.id === apptDoctor.id){
+        renderSlotsForDate(pickDate.value);
+      }
+    });
+
+    function escapeHtml(s){ if(!s) return ''; return s.replace(/[&<>"']/g, function(m){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]; }); }
+
+    const newsletterBtn = document.getElementById('newsletter-btn');
+    const newsletterModal = document.getElementById('newsletter-modal');
+    const closeNewsletterModal = document.getElementById('close-newsletter-modal');
+    newsletterBtn && newsletterBtn.addEventListener('click', ()=>{
+      const email = (document.getElementById('newsletter-email').value||'').trim();
+      if(!email || !/^\S+@\S+\.\S+$/.test(email)){ alert('Masukkan email yang valid terlebih dahulu.'); return; }
+      newsletterModal.classList.add('show');
+    });
+    closeNewsletterModal && closeNewsletterModal.addEventListener('click', ()=> {
+      newsletterModal.classList.remove('show');
+    });
+    newsletterModal && newsletterModal.addEventListener('click', (e)=> { if(e.target===newsletterModal){ newsletterModal.classList.remove('show'); } });
+
+    (function init(){
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('pickDate').value = today;
+      document.getElementById('apptDate').value = today;
+    })();
+
+    window.renderDoctors = renderDoctors;
+  </script>
+</body>
+</html>

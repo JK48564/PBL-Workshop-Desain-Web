@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Sistem Layanan Kesehatan e-Government</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --info: #1abc9c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --sidebar-width: 280px;
+            --header-height: 70px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--primary);
+            color: white;
+            transition: all 0.3s ease;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            background: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            height: var(--header-height);
+        }
+        
+        .sidebar-header img {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .sidebar-header h2 {
+            font-size: 20px;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .menu-section {
+            padding: 10px 20px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #95a5a6;
+            margin-top: 15px;
+        }
+        
+        .sidebar-menu a {
+            color: #ddd;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            transition: all 0.3s;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: var(--dark);
+            color: white;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin-left: var(--sidebar-width);
+        }
+        
+        .top-header {
+            background: white;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            height: var(--header-height);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--light);
+            border-radius: 20px;
+            padding: 5px 15px;
+            width: 300px;
+        }
+        
+        .search-bar input {
+            background: transparent;
+            border: none;
+            padding: 8px;
+            width: 100%;
+            outline: none;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .content {
+            padding: 30px;
+            flex: 1;
+        }
+        
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-header h1 {
+            font-size: 28px;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .bg-primary { background: var(--secondary); color: white; }
+        .bg-success { background: var(--success); color: white; }
+        .bg-warning { background: var(--warning); color: white; }
+        .bg-accent { background: var(--accent); color: white; }
+        .bg-info { background: var(--info); color: white; }
+        
+        .card h3 {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+        
+        .card p {
+            color: #777;
+            font-size: 14px;
+        }
+        
+        .content-section {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .section-header h2 {
+            font-size: 20px;
+            color: var(--dark);
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-outline {
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+            background: transparent;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background: #e7f6ef;
+            color: var(--success);
+        }
+        
+        .status-inactive {
+            background: #fde9e9;
+            color: var(--accent);
+        }
+        
+        .status-warning {
+            background: #fef5e9;
+            color: var(--warning);
+        }
+        
+        .status-pending {
+            background: #e8f4fd;
+            color: var(--secondary);
+        }
+        
+        .status-completed {
+            background: #e7f6ef;
+            color: var(--success);
+        }
+        
+        .status-cancelled {
+            background: #fde9e9;
+            color: var(--accent);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #777;
+            transition: all 0.2s;
+        }
+        
+        .action-btn:hover {
+            background: #f5f5f5;
+            color: var(--secondary);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--secondary);
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            color: #777;
+            font-size: 14px;
+        }
+        
+        .notification-badge {
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--secondary);
+            color: var(--secondary);
+            font-weight: 500;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .close {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .menu-toggle {
+            display: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .chart-placeholder {
+            background: #f9f9f9;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            margin-top: 20px;
+            color: #777;
+        }
+        
+        .error-message {
+            color: var(--accent);
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+        }
+        
+        .report-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        
+        .summary-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .summary-label {
+            color: #777;
+            font-size: 14px;
+        }
+        
+        .trend-up {
+            color: var(--success);
+        }
+        
+        .trend-down {
+            color: var(--accent);
+        }
+        
+        .chart-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .chart-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .chart-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .page-btn {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .page-btn.active {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+        
+        .page-btn:disabled {
+            background: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--secondary);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 70px;
+            }
+            
+            .sidebar-header h2, .sidebar-menu span, .menu-section {
+                display: none;
+            }
+            
+            .sidebar-header {
+                justify-content: center;
+            }
+            
+            .sidebar-menu a {
+                justify-content: center;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+            
+            .chart-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .top-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+                height: auto;
+                padding: 15px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .sidebar.open {
+                width: 280px;
+            }
+            
+            .sidebar.open .sidebar-header h2, 
+            .sidebar.open .sidebar-menu span, 
+            .sidebar.open .menu-section {
+                display: block;
+            }
+            
+            .sidebar.open .sidebar-menu a {
+                justify-content: flex-start;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .filter-row {
+                flex-direction: column;
+            }
+            
+            .filter-group {
+                min-width: 100%;
+            }
+            
+            .report-summary {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .report-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MCA1MCI+PHBhdGggZD0iTTI1IDVDMTQuNzg2IDUgNi41IDEzLjI4NiA2LjUgMjMuNWMwIDUuNDI3IDIuMzgyIDEwLjMwOCA2LjE3NiAxMy42OTdsLTAuODc1IDQuNzYyYzAuMDA3IDAuMTYzIDAuMDk0IDAuMzEzIDAuMjI2IDAuNDA2YzAuMTM0IDAuMDk0IDAuMzA2IDAuMTE3IDAuNDU2IDAuMDZsNS4wODgtMi4zMTJjMS41NTYgMC40NDMgMy4xOTYgMC42ODEgNC44ODkgMC42ODFjMTAuMjE0IDAgMTguNS04LjI4NiAxOC41LTE4LjVTMzUuMjE0IDUgMjUgNXoiIGZpbGw9IiMzNDk4ZGIiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjE4IiByPSIzIiBmaWxsPSJ3aGl0ZSIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iMTgiIHI9IjMiIGZpbGw9IndoaXRlIi8+PHBhdGggZD0iTTE2IDI4YzEgMyA0IDUgNyA1czYtMiA3LTUiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==" alt="Logo">
+                <h2>Admin Panel</h2>
+            </div>
+            <nav class="sidebar-menu">
+                <div class="menu-section">Menu Utama</div>
+                <ul>
+                    <li><a href="Index_Admin.html" ><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+                    <li><a href="#"><i class="fas fa-chart-line"></i> <span>Statistik & Laporan</span></a></li>
+                </ul>
+                
+                <div class="menu-section">Manajemen Pengguna</div>
+                <ul>
+                    <li><a href="#"><i class="fas fa-user-shield"></i> <span>Manajemen Akun</span></a></li>
+                    <li><a href="#"><i class="fas fa-users-cog"></i> <span>Role & Permission</span></a></li>
+                    <li><a href="#"><i class="fas fa-history"></i> <span>Audit Trail</span></a></li>
+                </ul>
+                
+                <div class="menu-section">Manajemen Data</div>
+                <ul>
+                    <li><a href="Laporan_pasien.html" class="active"><i class="fas fa-user-injured"></i> <span>Data Pasien</span></a></li>
+                    <li><a href="Manajemen Dokter.html"><i class="fas fa-user-md"></i> <span>Tenaga Kesehatan</span></a></li>
+                    <li><a href="Manajemen_fasilitas.html"><i class="fas fa-hospital"></i> <span>Fasilitas Kesehatan</span></a></li>
+                    <li><a href="#"><i class="fas fa-pills"></i> <span>Manajemen Obat</span></a></li>
+                </ul>
+                
+                <div class="menu-section">Layanan</div>
+                <ul>
+                    <li><a href="#"><i class="fas fa-calendar-check"></i> <span>Janji Temu</span></a></li>
+                    <li><a href="#"><i class="fas fa-clock"></i> <span>Manajemen Antrian</span></a></li>
+                    <li><a href="#"><i class="fas fa-exchange-alt"></i> <span>Rujukan</span></a></li>
+                </ul>
+                
+                <div class="menu-section">Integrasi & Keamanan</div>
+                <ul>
+                    <li><a href="#"><i class="fas fa-plug"></i> <span>Integrasi API</span></a></li>
+                    <li><a href="#"><i class="fas fa-shield-alt"></i> <span>Keamanan Data</span></a></li>
+                    <li><a href="#"><i class="fas fa-database"></i> <span>Backup & Recovery</span></a></li>
+                </ul>
+                
+                <div class="menu-section">Konten & Pengaturan</div>
+                <ul>
+                    <li><a href="#"><i class="fas fa-newspaper"></i> <span>Informasi Kesehatan</span></a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> <span>Pengaturan Sistem</span></a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <div class="top-header">
+                <div class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="globalSearch" placeholder="Cari...">
+                </div>
+                <div class="user-info">
+                    <div class="notifications" style="position: relative;">
+                        <i class="fas fa-bell" id="notificationIcon"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    <div class="user-avatar">
+                        <span>A</span>
+                    </div>
+                    <div class="user-details">
+                        <h4>Admin User</h4>
+                        <p>Super Administrator</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="dashboard-header">
+                    <h1>Laporan & Statistik Pasien</h1>
+                    <p>Analisis data pasien dan statistik kunjungan untuk evaluasi layanan kesehatan</p>
+                </div>
+
+                <div class="report-summary">
+                    <div class="summary-card">
+                        <div class="summary-value" id="totalPatients">2,548</div>
+                        <div class="summary-label">Total Pasien Terdaftar</div>
+                        <div class="trend-up"><i class="fas fa-arrow-up"></i> 12% dari bulan lalu</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" id="newPatients">187</div>
+                        <div class="summary-label">Pasien Baru Bulan Ini</div>
+                        <div class="trend-up"><i class="fas fa-arrow-up"></i> 8% dari bulan lalu</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" id="avgVisits">2.4</div>
+                        <div class="summary-label">Rata-rata Kunjungan per Pasien</div>
+                        <div class="trend-down"><i class="fas fa-arrow-down"></i> 5% dari bulan lalu</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" id="satisfactionRate">94%</div>
+                        <div class="summary-label">Tingkat Kepuasan Pasien</div>
+                        <div class="trend-up"><i class="fas fa-arrow-up"></i> 2% dari bulan lalu</div>
+                    </div>
+                </div>
+
+                    
+                    <div class="filter-row" id="custom-date-range" style="display: none;">
+                        <div class="filter-group">
+                            <label for="start-date">Tanggal Mulai</label>
+                            <input type="date" id="start-date">
+                        </div>
+                        <div class="filter-group">
+                            <label for="end-date">Tanggal Selesai</label>
+                            <input type="date" id="end-date">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-row">
+                    <div class="chart-card">
+                        <div class="chart-title">Trend Pendaftaran Pasien</div>
+                        <div class="chart-container" id="patientRegistrationChart">
+                            <canvas id="registrationChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-title">Distribusi Usia Pasien</div>
+                        <div class="chart-container" id="patientAgeChart">
+                            <canvas id="ageDistributionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-row">
+                    <div class="chart-card">
+                        <div class="chart-title">Jenis Kelamin Pasien</div>
+                        <div class="chart-container" id="patientGenderChart">
+                            <canvas id="genderChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-title">Kunjungan Berdasarkan Poli</div>
+                        <div class="chart-container" id="patientDepartmentChart">
+                            <canvas id="departmentChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2>Laporan Detail Pasien</h2>
+                        <button class="btn btn-outline" id="exportDataBtn"><i class="fas fa-file-export"></i> Ekspor Data</button>
+                    </div>
+                    
+                    <div class="tabs">
+                        <div class="tab active" data-tab="patient-data">Data Pasien</div>
+                        <div class="tab" data-tab="visit-data">Data Kunjungan</div>
+                        <div class="tab" data-tab="medical-data">Data Medis</div>
+                    </div>
+                    
+                    <div class="tab-content active" id="patient-data-tab">
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label for="patient-age-filter">Filter Usia</label>
+                                <select id="patient-age-filter">
+                                    <option value="">Semua Usia</option>
+                                    <option value="child">Anak (0-12)</option>
+                                    <option value="teen">Remaja (13-19)</option>
+                                    <option value="adult">Dewasa (20-59)</option>
+                                    <option value="senior">Lansia (60+)</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="patient-gender-filter">Filter Jenis Kelamin</label>
+                                <select id="patient-gender-filter">
+                                    <option value="">Semua</option>
+                                    <option value="L">Laki-laki</option>
+                                    <option value="P">Perempuan</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="patient-status-filter">Filter Status</label>
+                                <select id="patient-status-filter">
+                                    <option value="">Semua Status</option>
+                                    <option value="active">Aktif</option>
+                                    <option value="inactive">Tidak Aktif</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <table id="patient-report-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Pasien</th>
+                                    <th>Nama</th>
+                                    <th>Usia</th>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Tanggal Daftar</th>
+                                    <th>Jumlah Kunjungan</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="patient-report-body">
+                            </tbody>
+                        </table>
+                        
+                        <div class="pagination" id="patient-pagination">
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="visit-data-tab">
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label for="visit-date-filter">Filter Tanggal</label>
+                                <select id="visit-date-filter">
+                                    <option value="">Semua Tanggal</option>
+                                    <option value="today">Hari Ini</option>
+                                    <option value="week">Minggu Ini</option>
+                                    <option value="month">Bulan Ini</option>
+                                    <option value="custom">Kustom</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="visit-status-filter">Filter Status</label>
+                                <select id="visit-status-filter">
+                                    <option value="">Semua Status</option>
+                                    <option value="pending">Menunggu</option>
+                                    <option value="completed">Selesai</option>
+                                    <option value="cancelled">Dibatalkan</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="visit-department-filter">Filter Poli</label>
+                                <select id="visit-department-filter">
+                                    <option value="">Semua Poli</option>
+                                    <option value="umum">Umum</option>
+                                    <option value="anak">Anak</option>
+                                    <option value="kandungan">Kandungan</option>
+                                    <option value="penyakit-dalam">Penyakit Dalam</option>
+                                    <option value="bedah">Bedah</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <table id="visit-report-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Kunjungan</th>
+                                    <th>ID Pasien</th>
+                                    <th>Nama Pasien</th>
+                                    <th>Tanggal</th>
+                                    <th>Poli</th>
+                                    <th>Dokter</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="visit-report-body">
+                            </tbody>
+                        </table>
+                        
+                        <div class="pagination" id="visit-pagination">
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="medical-data-tab">
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label for="medical-date-filter">Filter Tanggal</label>
+                                <select id="medical-date-filter">
+                                    <option value="">Semua Tanggal</option>
+                                    <option value="today">Hari Ini</option>
+                                    <option value="week">Minggu Ini</option>
+                                    <option value="month">Bulan Ini</option>
+                                    <option value="custom">Kustom</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="medical-diagnosis-filter">Filter Diagnosis</label>
+                                <select id="medical-diagnosis-filter">
+                                    <option value="">Semua Diagnosis</option>
+                                    <option value="flu">Flu</option>
+                                    <option value="hipertensi">Hipertensi</option>
+                                    <option value="diabetes">Diabetes</option>
+                                    <option value="asma">Asma</option>
+                                    <option value="gastritis">Gastritis</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="medical-department-filter">Filter Poli</label>
+                                <select id="medical-department-filter">
+                                    <option value="">Semua Poli</option>
+                                    <option value="umum">Umum</option>
+                                    <option value="anak">Anak</option>
+                                    <option value="kandungan">Kandungan</option>
+                                    <option value="penyakit-dalam">Penyakit Dalam</option>
+                                    <option value="bedah">Bedah</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <table id="medical-report-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Rekam Medis</th>
+                                    <th>ID Pasien</th>
+                                    <th>Nama Pasien</th>
+                                    <th>Tanggal</th>
+                                    <th>Diagnosis</th>
+                                    <th>Tindakan</th>
+                                    <th>Obat</th>
+                                </tr>
+                            </thead>
+                            <tbody id="medical-report-body">
+                            </tbody>
+                        </table>
+                        
+                        <div class="pagination" id="medical-pagination">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="reportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Generate Laporan Pasien</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="reportForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="report-type">Jenis Laporan</label>
+                            <select id="report-type">
+                                <option value="patient-summary">Ringkasan Pasien</option>
+                                <option value="visit-summary">Ringkasan Kunjungan</option>
+                                <option value="medical-summary">Ringkasan Medis</option>
+                                <option value="full-report">Laporan Lengkap</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="report-format">Format Laporan</label>
+                            <select id="report-format">
+                                <option value="pdf">PDF</option>
+                                <option value="excel">Excel</option>
+                                <option value="csv">CSV</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="report-notes">Catatan (Opsional)</label>
+                        <textarea id="report-notes" placeholder="Tambahkan catatan untuk laporan"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelReportBtn">Batal</button>
+                <button class="btn btn-primary" id="generateReportModalBtn"><i class="fas fa-download"></i> Generate Laporan</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const patientReportData = [
+            { id: 'P202309001', name: 'Rina Wijaya', age: 25, gender: 'P', registrationDate: '15 Jan 2023', visits: 12, status: 'Aktif' },
+            { id: 'P202309002', name: 'Budi Pratama', age: 36, gender: 'L', registrationDate: '22 Feb 2023', visits: 8, status: 'Aktif' },
+            { id: 'P202309003', name: 'Sari Indah', age: 29, gender: 'P', registrationDate: '05 Mar 2023', visits: 5, status: 'Aktif' },
+            { id: 'P202309004', name: 'Ahmad Fauzi', age: 42, gender: 'L', registrationDate: '18 Mar 2023', visits: 15, status: 'Aktif' },
+            { id: 'P202309005', name: 'Dewi Lestari', age: 31, gender: 'P', registrationDate: '29 Mar 2023', visits: 7, status: 'Aktif' },
+            { id: 'P202309006', name: 'Joko Santoso', age: 55, gender: 'L', registrationDate: '12 Apr 2023', visits: 22, status: 'Aktif' },
+            { id: 'P202309007', name: 'Maya Sari', age: 28, gender: 'P', registrationDate: '25 Apr 2023', visits: 4, status: 'Aktif' },
+            { id: 'P202309008', name: 'Rudi Hermawan', age: 47, gender: 'L', registrationDate: '08 May 2023', visits: 11, status: 'Aktif' },
+            { id: 'P202309009', name: 'Linda Wati', age: 33, gender: 'P', registrationDate: '19 May 2023', visits: 9, status: 'Aktif' },
+            { id: 'P202309010', name: 'Hendra Setiawan', age: 39, gender: 'L', registrationDate: '03 Jun 2023', visits: 6, status: 'Aktif' },
+            { id: 'P202309011', name: 'Siti Rahayu', age: 8, gender: 'P', registrationDate: '10 Jun 2023', visits: 3, status: 'Aktif' },
+            { id: 'P202309012', name: 'Andi Wijaya', age: 17, gender: 'L', registrationDate: '15 Jun 2023', visits: 2, status: 'Aktif' },
+            { id: 'P202309013', name: 'Martha Simatupang', age: 65, gender: 'P', registrationDate: '22 Jun 2023', visits: 18, status: 'Aktif' },
+            { id: 'P202309014', name: 'Bambang Sudirman', age: 72, gender: 'L', registrationDate: '30 Jun 2023', visits: 14, status: 'Aktif' },
+            { id: 'P202309015', name: 'Ratna Dewi', age: 45, gender: 'P', registrationDate: '05 Jul 2023', visits: 10, status: 'Aktif' }
+        ];
+
+        const visitReportData = [
+            { id: 'V202309001', patientId: 'P202309001', patientName: 'Rina Wijaya', date: '15 Sep 2024', department: 'Umum', doctor: 'Dr. Andi', status: 'Selesai' },
+            { id: 'V202309002', patientId: 'P202309002', patientName: 'Budi Pratama', date: '16 Sep 2024', department: 'Penyakit Dalam', doctor: 'Dr. Sari', status: 'Selesai' },
+            { id: 'V202309003', patientId: 'P202309003', patientName: 'Sari Indah', date: '16 Sep 2024', department: 'Kandungan', doctor: 'Dr. Maya', status: 'Menunggu' },
+            { id: 'V202309004', patientId: 'P202309004', patientName: 'Ahmad Fauzi', date: '17 Sep 2024', department: 'Bedah', doctor: 'Dr. Rudi', status: 'Selesai' },
+            { id: 'V202309005', patientId: 'P202309005', patientName: 'Dewi Lestari', date: '17 Sep 2024', department: 'Anak', doctor: 'Dr. Linda', status: 'Dibatalkan' },
+            { id: 'V202309006', patientId: 'P202309006', patientName: 'Joko Santoso', date: '18 Sep 2024', department: 'Umum', doctor: 'Dr. Andi', status: 'Selesai' },
+            { id: 'V202309007', patientId: 'P202309007', patientName: 'Maya Sari', date: '18 Sep 2024', department: 'Kandungan', doctor: 'Dr. Maya', status: 'Selesai' },
+            { id: 'V202309008', patientId: 'P202309008', patientName: 'Rudi Hermawan', date: '19 Sep 2024', department: 'Penyakit Dalam', doctor: 'Dr. Sari', status: 'Menunggu' },
+            { id: 'V202309009', patientId: 'P202309009', patientName: 'Linda Wati', date: '19 Sep 2024', department: 'Anak', doctor: 'Dr. Linda', status: 'Selesai' },
+            { id: 'V202309010', patientId: 'P202309010', patientName: 'Hendra Setiawan', date: '20 Sep 2024', department: 'Bedah', doctor: 'Dr. Rudi', status: 'Selesai' },
+            { id: 'V202309011', patientId: 'P202309011', patientName: 'Siti Rahayu', date: '20 Sep 2024', department: 'Anak', doctor: 'Dr. Linda', status: 'Selesai' },
+            { id: 'V202309012', patientId: 'P202309012', patientName: 'Andi Wijaya', date: '21 Sep 2024', department: 'Umum', doctor: 'Dr. Andi', status: 'Menunggu' },
+            { id: 'V202309013', patientId: 'P202309013', patientName: 'Martha Simatupang', date: '21 Sep 2024', department: 'Penyakit Dalam', doctor: 'Dr. Sari', status: 'Selesai' },
+            { id: 'V202309014', patientId: 'P202309014', patientName: 'Bambang Sudirman', date: '22 Sep 2024', department: 'Umum', doctor: 'Dr. Andi', status: 'Selesai' },
+            { id: 'V202309015', patientId: 'P202309015', patientName: 'Ratna Dewi', date: '22 Sep 2024', department: 'Kandungan', doctor: 'Dr. Maya', status: 'Dibatalkan' }
+        ];
+
+        const medicalReportData = [
+            { id: 'RM202309001', patientId: 'P202309001', patientName: 'Rina Wijaya', date: '15 Sep 2024', diagnosis: 'Flu', procedure: 'Pemeriksaan Umum', medication: 'Paracetamol' },
+            { id: 'RM202309002', patientId: 'P202309002', patientName: 'Budi Pratama', date: '16 Sep 2024', diagnosis: 'Hipertensi', procedure: 'Pemeriksaan Tekanan Darah', medication: 'Amlodipine' },
+            { id: 'RM202309003', patientId: 'P202309003', patientName: 'Sari Indah', date: '16 Sep 2024', diagnosis: 'Kehamilan Trimester 1', procedure: 'USG', medication: 'Asam Folat' },
+            { id: 'RM202309004', patientId: 'P202309004', patientName: 'Ahmad Fauzi', date: '17 Sep 2024', diagnosis: 'Appendicitis', procedure: 'Operasi Appendektomi', medication: 'Antibiotik, Analgesik' },
+            { id: 'RM202309005', patientId: 'P202309005', patientName: 'Dewi Lestari', date: '17 Sep 2024', diagnosis: 'Demam Berdarah', procedure: 'Tes Darah', medication: 'Paracetamol, Infus' },
+            { id: 'RM202309006', patientId: 'P202309006', patientName: 'Joko Santoso', date: '18 Sep 2024', diagnosis: 'Diabetes Tipe 2', procedure: 'Tes Gula Darah', medication: 'Metformin' },
+            { id: 'RM202309007', patientId: 'P202309007', patientName: 'Maya Sari', date: '18 Sep 2024', diagnosis: 'Anemia', procedure: 'Tes Darah', medication: 'Suplemen Zat Besi' },
+            { id: 'RM202309008', patientId: 'P202309008', patientName: 'Rudi Hermawan', date: '19 Sep 2024', diagnosis: 'Asma', procedure: 'Spirometri', medication: 'Salbutamol' },
+            { id: 'RM202309009', patientId: 'P202309009', patientName: 'Linda Wati', date: '19 Sep 2024', diagnosis: 'Infeksi Telinga', procedure: 'Pemeriksaan Telinga', medication: 'Antibiotik' },
+            { id: 'RM202309010', patientId: 'P202309010', patientName: 'Hendra Setiawan', date: '20 Sep 2024', diagnosis: 'Fraktura Tibia', procedure: 'Pemasangan Gips', medication: 'Analgesik' },
+            { id: 'RM202309011', patientId: 'P202309011', patientName: 'Siti Rahayu', date: '20 Sep 2024', diagnosis: 'Campak', procedure: 'Pemeriksaan Umum', medication: 'Vitamin A, Paracetamol' },
+            { id: 'RM202309012', patientId: 'P202309012', patientName: 'Andi Wijaya', date: '21 Sep 2024', diagnosis: 'Gastritis', procedure: 'Endoskopi', medication: 'Antasida, Omeprazole' },
+            { id: 'RM202309013', patientId: 'P202309013', patientName: 'Martha Simatupang', date: '21 Sep 2024', diagnosis: 'Artritis', procedure: 'Pemeriksaan Sendi', medication: 'Antiinflamasi' },
+            { id: 'RM202309014', patientId: 'P202309014', patientName: 'Bambang Sudirman', date: '22 Sep 2024', diagnosis: 'Pneumonia', procedure: 'Rontgen Dada', medication: 'Antibiotik, Ekspektoran' },
+            { id: 'RM202309015', patientId: 'P202309015', patientName: 'Ratna Dewi', date: '22 Sep 2024', diagnosis: 'Hipertiroid', procedure: 'Tes Fungsi Tiroid', medication: 'Antitiroid' }
+        ];
+
+        const registrationData = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+            datasets: [{
+                label: 'Pendaftaran Pasien',
+                data: [120, 150, 180, 160, 200, 220, 240, 210, 190, 230, 250, 280],
+                borderColor: '#3498db',
+                backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        };
+
+        const ageDistributionData = {
+            labels: ['0-12', '13-19', '20-29', '30-39', '40-49', '50-59', '60+'],
+            datasets: [{
+                label: 'Jumlah Pasien',
+                data: [120, 180, 350, 420, 380, 290, 210],
+                backgroundColor: [
+                    '#3498db', '#2ecc71', '#9b59b6', '#e74c3c', '#f39c12', '#1abc9c', '#34495e'
+                ]
+            }]
+        };
+
+        const genderData = {
+            labels: ['Laki-laki', 'Perempuan'],
+            datasets: [{
+                data: [55, 45],
+                backgroundColor: ['#3498db', '#e74c3c']
+            }]
+        };
+
+        const departmentData = {
+            labels: ['Umum', 'Anak', 'Kandungan', 'Penyakit Dalam', 'Bedah', 'Jantung', 'Kulit'],
+            datasets: [{
+                label: 'Jumlah Kunjungan',
+                data: [320, 280, 240, 190, 150, 120, 90],
+                backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                borderColor: '#3498db',
+                borderWidth: 1
+            }]
+        };
+
+        let filteredPatientData = [...patientReportData];
+        let filteredVisitData = [...visitReportData];
+        let filteredMedicalData = [...medicalReportData];
+        let currentPatientPage = 1;
+        let currentVisitPage = 1;
+        let currentMedicalPage = 1;
+        const itemsPerPage = 5;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+            const globalSearch = document.getElementById('globalSearch');
+            const notificationIcon = document.getElementById('notificationIcon');
+            const notificationBadge = document.querySelector('.notification-badge');
+            
+            const generateReportBtn = document.getElementById('generateReportBtn');
+            const resetFilterBtn = document.getElementById('resetFilterBtn');
+            const exportDataBtn = document.getElementById('exportDataBtn');
+            const reportModal = document.getElementById('reportModal');
+            const cancelReportBtn = document.getElementById('cancelReportBtn');
+            const generateReportModalBtn = document.getElementById('generateReportModalBtn');
+            const reportForm = document.getElementById('reportForm');
+            
+            const reportPeriod = document.getElementById('report-period');
+            const customDateRange = document.getElementById('custom-date-range');
+            const reportMonth = document.getElementById('report-month');
+            const reportYear = document.getElementById('report-year');
+            
+            const patientAgeFilter = document.getElementById('patient-age-filter');
+            const patientGenderFilter = document.getElementById('patient-gender-filter');
+            const patientStatusFilter = document.getElementById('patient-status-filter');
+            
+            const visitDateFilter = document.getElementById('visit-date-filter');
+            const visitStatusFilter = document.getElementById('visit-status-filter');
+            const visitDepartmentFilter = document.getElementById('visit-department-filter');
+            
+            const medicalDateFilter = document.getElementById('medical-date-filter');
+            const medicalDiagnosisFilter = document.getElementById('medical-diagnosis-filter');
+            const medicalDepartmentFilter = document.getElementById('medical-department-filter');
+            
+            const closeButtons = document.querySelectorAll('.close');
+            
+            initPatientReports();
+            initVisitReports();
+            initMedicalReports();
+            
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    const tabName = tab.getAttribute('data-tab');
+                    document.getElementById(`${tabName}-tab`).classList.add('active');
+                    
+                    if (tabName === 'visit-data') {
+                        renderVisitReport();
+                        updateVisitPagination();
+                    } else if (tabName === 'medical-data') {
+                        renderMedicalReport();
+                        updateMedicalPagination();
+                    }
+                });
+            });
+            
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth < 768 && 
+                    !sidebar.contains(e.target) && 
+                    !menuToggle.contains(e.target) &&
+                    sidebar.classList.contains('open')) {
+                    sidebar.classList.remove('open');
+                }
+            });
+            
+            reportPeriod.addEventListener('change', function() {
+                if (this.value === 'custom') {
+                    customDateRange.style.display = 'flex';
+                } else {
+                    customDateRange.style.display = 'none';
+                }
+            });
+            
+            generateReportBtn.addEventListener('click', () => {
+                reportModal.style.display = 'flex';
+            });
+            
+            closeButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    reportModal.style.display = 'none';
+                });
+            });
+            
+            cancelReportBtn.addEventListener('click', () => {
+                reportModal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', (e) => {
+                if (e.target === reportModal) {
+                    reportModal.style.display = 'none';
+                }
+            });
+            
+            generateReportModalBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const reportType = document.getElementById('report-type').value;
+                const reportFormat = document.getElementById('report-format').value;
+                
+                alert(`Laporan ${reportType} dalam format ${reportFormat.toUpperCase()} berhasil digenerate!`);
+                reportModal.style.display = 'none';
+            });
+            
+            resetFilterBtn.addEventListener('click', () => {
+                document.getElementById('report-period').value = 'monthly';
+                document.getElementById('report-month').value = '09';
+                document.getElementById('report-year').value = '2024';
+                document.getElementById('report-facility').value = 'all';
+                customDateRange.style.display = 'none';
+                
+                patientAgeFilter.value = '';
+                patientGenderFilter.value = '';
+                patientStatusFilter.value = '';
+                visitDateFilter.value = '';
+                visitStatusFilter.value = '';
+                visitDepartmentFilter.value = '';
+                medicalDateFilter.value = '';
+                medicalDiagnosisFilter.value = '';
+                medicalDepartmentFilter.value = '';
+                globalSearch.value = '';
+                
+                filteredPatientData = [...patientReportData];
+                filteredVisitData = [...visitReportData];
+                filteredMedicalData = [...medicalReportData];
+                currentPatientPage = 1;
+                currentVisitPage = 1;
+                currentMedicalPage = 1;
+                
+                renderPatientReport();
+                renderVisitReport();
+                renderMedicalReport();
+                updatePatientPagination();
+                updateVisitPagination();
+                updateMedicalPagination();
+            });
+            
+            exportDataBtn.addEventListener('click', () => {
+                alert('Data pasien berhasil diekspor!');
+            });
+            
+            globalSearch.addEventListener('input', function() {
+                filterPatientData();
+                filterVisitData();
+                filterMedicalData();
+            });
+            
+            patientAgeFilter.addEventListener('change', filterPatientData);
+            patientGenderFilter.addEventListener('change', filterPatientData);
+            patientStatusFilter.addEventListener('change', filterPatientData);
+            
+            visitDateFilter.addEventListener('change', filterVisitData);
+            visitStatusFilter.addEventListener('change', filterVisitData);
+            visitDepartmentFilter.addEventListener('change', filterVisitData);
+            
+            medicalDateFilter.addEventListener('change', filterMedicalData);
+            medicalDiagnosisFilter.addEventListener('change', filterMedicalData);
+            medicalDepartmentFilter.addEventListener('change', filterMedicalData);
+            
+            notificationIcon.addEventListener('click', function() {
+                alert('Anda memiliki 3 notifikasi baru');
+                notificationBadge.style.display = 'none';
+            });
+            
+            function initPatientReports() {
+                renderPatientReport();
+                initCharts();
+                updateReportSummary();
+            }
+            
+            function initVisitReports() {
+                renderVisitReport();
+                updateVisitPagination();
+            }
+            
+            function initMedicalReports() {
+                renderMedicalReport();
+                updateMedicalPagination();
+            }
+            
+            function filterPatientData() {
+                const ageValue = patientAgeFilter.value;
+                const genderValue = patientGenderFilter.value;
+                const statusValue = patientStatusFilter.value;
+                const searchTerm = globalSearch.value.toLowerCase();
+                
+                filteredPatientData = patientReportData.filter(patient => {
+                    const matchesAge = !ageValue || checkAgeCategory(patient.age, ageValue);
+                    const matchesGender = !genderValue || patient.gender === genderValue;
+                    const matchesStatus = !statusValue || patient.status.toLowerCase() === statusValue.toLowerCase();
+                    const matchesSearch = !searchTerm || 
+                        patient.name.toLowerCase().includes(searchTerm) || 
+                        patient.id.toLowerCase().includes(searchTerm);
+                    
+                    return matchesAge && matchesGender && matchesStatus && matchesSearch;
+                });
+                
+                currentPatientPage = 1;
+                renderPatientReport();
+                updatePatientPagination();
+            }
+            
+            function filterVisitData() {
+                const dateValue = visitDateFilter.value;
+                const statusValue = visitStatusFilter.value;
+                const departmentValue = visitDepartmentFilter.value;
+                const searchTerm = globalSearch.value.toLowerCase();
+                
+                filteredVisitData = visitReportData.filter(visit => {
+                    const matchesDate = !dateValue || checkDateFilter(visit.date, dateValue);
+                    const matchesStatus = !statusValue || visit.status.toLowerCase() === statusValue.toLowerCase();
+                    const matchesDepartment = !departmentValue || visit.department.toLowerCase() === departmentValue.toLowerCase();
+                    const matchesSearch = !searchTerm || 
+                        visit.patientName.toLowerCase().includes(searchTerm) || 
+                        visit.id.toLowerCase().includes(searchTerm) ||
+                        visit.patientId.toLowerCase().includes(searchTerm);
+                    
+                    return matchesDate && matchesStatus && matchesDepartment && matchesSearch;
+                });
+                
+                currentVisitPage = 1;
+                renderVisitReport();
+                updateVisitPagination();
+            }
+            
+            function filterMedicalData() {
+                const dateValue = medicalDateFilter.value;
+                const diagnosisValue = medicalDiagnosisFilter.value;
+                const departmentValue = medicalDepartmentFilter.value;
+                const searchTerm = globalSearch.value.toLowerCase();
+                
+                filteredMedicalData = medicalReportData.filter(medical => {
+                    const matchesDate = !dateValue || checkDateFilter(medical.date, dateValue);
+                    const matchesDiagnosis = !diagnosisValue || medical.diagnosis.toLowerCase() === diagnosisValue.toLowerCase();
+                    const matchesDepartment = !departmentValue || medical.diagnosis.toLowerCase().includes(departmentValue.toLowerCase());
+                    const matchesSearch = !searchTerm || 
+                        medical.patientName.toLowerCase().includes(searchTerm) || 
+                        medical.id.toLowerCase().includes(searchTerm) ||
+                        medical.patientId.toLowerCase().includes(searchTerm);
+                    
+                    return matchesDate && matchesDiagnosis && matchesDepartment && matchesSearch;
+                });
+                
+                currentMedicalPage = 1;
+                renderMedicalReport();
+                updateMedicalPagination();
+            }
+            
+            function checkDateFilter(date, filter) {
+                if (filter === 'today') {
+                    return date.includes('22 Sep');
+                }
+                return true;
+            }
+            
+            function renderPatientReport() {
+                const patientReportBody = document.getElementById('patient-report-body');
+                patientReportBody.innerHTML = '';
+                
+                if (filteredPatientData.length === 0) {
+                    patientReportBody.innerHTML = '<tr><td colspan="7" class="no-data">Tidak ada data pasien yang sesuai dengan filter</td></tr>';
+                    return;
+                }
+                
+                const startIndex = (currentPatientPage - 1) * itemsPerPage;
+                const endIndex = Math.min(startIndex + itemsPerPage, filteredPatientData.length);
+                const currentPatients = filteredPatientData.slice(startIndex, endIndex);
+                
+                currentPatients.forEach(patient => {
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td>${patient.id}</td>
+                        <td>${patient.name}</td>
+                        <td>${patient.age} tahun</td>
+                        <td>${patient.gender === 'L' ? 'Laki-laki' : 'Perempuan'}</td>
+                        <td>${patient.registrationDate}</td>
+                        <td>${patient.visits}</td>
+                        <td><span class="status ${patient.status === 'Aktif' ? 'status-active' : 'status-inactive'}">${patient.status}</span></td>
+                    `;
+                    
+                    patientReportBody.appendChild(row);
+                });
+            }
+            
+            function renderVisitReport() {
+                const visitReportBody = document.getElementById('visit-report-body');
+                visitReportBody.innerHTML = '';
+                
+                if (filteredVisitData.length === 0) {
+                    visitReportBody.innerHTML = '<tr><td colspan="7" class="no-data">Tidak ada data kunjungan yang sesuai dengan filter</td></tr>';
+                    return;
+                }
+                
+                const startIndex = (currentVisitPage - 1) * itemsPerPage;
+                const endIndex = Math.min(startIndex + itemsPerPage, filteredVisitData.length);
+                const currentVisits = filteredVisitData.slice(startIndex, endIndex);
+                
+                currentVisits.forEach(visit => {
+                    const row = document.createElement('tr');
+                    
+                    let statusClass = 'status-pending';
+                    if (visit.status === 'Selesai') statusClass = 'status-completed';
+                    else if (visit.status === 'Dibatalkan') statusClass = 'status-cancelled';
+                    
+                    row.innerHTML = `
+                        <td>${visit.id}</td>
+                        <td>${visit.patientId}</td>
+                        <td>${visit.patientName}</td>
+                        <td>${visit.date}</td>
+                        <td>${visit.department}</td>
+                        <td>${visit.doctor}</td>
+                        <td><span class="status ${statusClass}">${visit.status}</span></td>
+                    `;
+                    
+                    visitReportBody.appendChild(row);
+                });
+            }
+            
+            function renderMedicalReport() {
+                const medicalReportBody = document.getElementById('medical-report-body');
+                medicalReportBody.innerHTML = '';
+                
+                if (filteredMedicalData.length === 0) {
+                    medicalReportBody.innerHTML = '<tr><td colspan="7" class="no-data">Tidak ada data medis yang sesuai dengan filter</td></tr>';
+                    return;
+                }
+                
+                const startIndex = (currentMedicalPage - 1) * itemsPerPage;
+                const endIndex = Math.min(startIndex + itemsPerPage, filteredMedicalData.length);
+                const currentMedical = filteredMedicalData.slice(startIndex, endIndex);
+                
+                currentMedical.forEach(medical => {
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td>${medical.id}</td>
+                        <td>${medical.patientId}</td>
+                        <td>${medical.patientName}</td>
+                        <td>${medical.date}</td>
+                        <td>${medical.diagnosis}</td>
+                        <td>${medical.procedure}</td>
+                        <td>${medical.medication}</td>
+                    `;
+                    
+                    medicalReportBody.appendChild(row);
+                });
+            }
+            
+            function checkAgeCategory(age, category) {
+                switch(category) {
+                    case 'child': return age <= 12;
+                    case 'teen': return age >= 13 && age <= 19;
+                    case 'adult': return age >= 20 && age <= 59;
+                    case 'senior': return age >= 60;
+                    default: return true;
+                }
+            }
+            
+            function updatePatientPagination() {
+                const pagination = document.getElementById('patient-pagination');
+                pagination.innerHTML = '';
+                
+                const totalPages = Math.ceil(filteredPatientData.length / itemsPerPage);
+                
+                if (totalPages <= 1) return;
+                
+                const prevBtn = document.createElement('button');
+                prevBtn.className = 'page-btn';
+                prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                prevBtn.disabled = currentPatientPage === 1;
+                prevBtn.addEventListener('click', () => {
+                    if (currentPatientPage > 1) {
+                        currentPatientPage--;
+                        renderPatientReport();
+                        updatePatientPagination();
+                    }
+                });
+                pagination.appendChild(prevBtn);
+                
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageBtn = document.createElement('button');
+                    pageBtn.className = i === currentPatientPage ? 'page-btn active' : 'page-btn';
+                    pageBtn.textContent = i;
+                    pageBtn.addEventListener('click', function() {
+                        currentPatientPage = i;
+                        renderPatientReport();
+                        updatePatientPagination();
+                    });
+                    pagination.appendChild(pageBtn);
+                }
+                
+                const nextBtn = document.createElement('button');
+                nextBtn.className = 'page-btn';
+                nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                nextBtn.disabled = currentPatientPage === totalPages;
+                nextBtn.addEventListener('click', () => {
+                    if (currentPatientPage < totalPages) {
+                        currentPatientPage++;
+                        renderPatientReport();
+                        updatePatientPagination();
+                    }
+                });
+                pagination.appendChild(nextBtn);
+            }
+            
+            function updateVisitPagination() {
+                const pagination = document.getElementById('visit-pagination');
+                pagination.innerHTML = '';
+                
+                const totalPages = Math.ceil(filteredVisitData.length / itemsPerPage);
+                
+                if (totalPages <= 1) return;
+                
+                const prevBtn = document.createElement('button');
+                prevBtn.className = 'page-btn';
+                prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                prevBtn.disabled = currentVisitPage === 1;
+                prevBtn.addEventListener('click', () => {
+                    if (currentVisitPage > 1) {
+                        currentVisitPage--;
+                        renderVisitReport();
+                        updateVisitPagination();
+                    }
+                });
+                pagination.appendChild(prevBtn);
+                
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageBtn = document.createElement('button');
+                    pageBtn.className = i === currentVisitPage ? 'page-btn active' : 'page-btn';
+                    pageBtn.textContent = i;
+                    pageBtn.addEventListener('click', function() {
+                        currentVisitPage = i;
+                        renderVisitReport();
+                        updateVisitPagination();
+                    });
+                    pagination.appendChild(pageBtn);
+                }
+                
+                const nextBtn = document.createElement('button');
+                nextBtn.className = 'page-btn';
+                nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                nextBtn.disabled = currentVisitPage === totalPages;
+                nextBtn.addEventListener('click', () => {
+                    if (currentVisitPage < totalPages) {
+                        currentVisitPage++;
+                        renderVisitReport();
+                        updateVisitPagination();
+                    }
+                });
+                pagination.appendChild(nextBtn);
+            }
+            
+            function updateMedicalPagination() {
+                const pagination = document.getElementById('medical-pagination');
+                pagination.innerHTML = '';
+                
+                const totalPages = Math.ceil(filteredMedicalData.length / itemsPerPage);
+                
+                if (totalPages <= 1) return;
+                
+                const prevBtn = document.createElement('button');
+                prevBtn.className = 'page-btn';
+                prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                prevBtn.disabled = currentMedicalPage === 1;
+                prevBtn.addEventListener('click', () => {
+                    if (currentMedicalPage > 1) {
+                        currentMedicalPage--;
+                        renderMedicalReport();
+                        updateMedicalPagination();
+                    }
+                });
+                pagination.appendChild(prevBtn);
+                
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageBtn = document.createElement('button');
+                    pageBtn.className = i === currentMedicalPage ? 'page-btn active' : 'page-btn';
+                    pageBtn.textContent = i;
+                    pageBtn.addEventListener('click', function() {
+                        currentMedicalPage = i;
+                        renderMedicalReport();
+                        updateMedicalPagination();
+                    });
+                    pagination.appendChild(pageBtn);
+                }
+                
+                const nextBtn = document.createElement('button');
+                nextBtn.className = 'page-btn';
+                nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                nextBtn.disabled = currentMedicalPage === totalPages;
+                nextBtn.addEventListener('click', () => {
+                    if (currentMedicalPage < totalPages) {
+                        currentMedicalPage++;
+                        renderMedicalReport();
+                        updateMedicalPagination();
+                    }
+                });
+                pagination.appendChild(nextBtn);
+            }
+            
+            function initCharts() {
+                const registrationCtx = document.getElementById('registrationChart').getContext('2d');
+                new Chart(registrationCtx, {
+                    type: 'line',
+                    data: registrationData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Jumlah Pasien'
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                const ageCtx = document.getElementById('ageDistributionChart').getContext('2d');
+                new Chart(ageCtx, {
+                    type: 'bar',
+                    data: ageDistributionData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Jumlah Pasien'
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                const genderCtx = document.getElementById('genderChart').getContext('2d');
+                new Chart(genderCtx, {
+                    type: 'doughnut',
+                    data: genderData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+                
+                const departmentCtx = document.getElementById('departmentChart').getContext('2d');
+                new Chart(departmentCtx, {
+                    type: 'bar',
+                    data: departmentData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Jumlah Kunjungan'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            function updateReportSummary() {
+                document.getElementById('totalPatients').textContent = '2,548';
+                document.getElementById('newPatients').textContent = '187';
+                document.getElementById('avgVisits').textContent = '2.4';
+                document.getElementById('satisfactionRate').textContent = '94%';
+            }
+            
+            function checkWidth() {
+                if (window.innerWidth < 768) {
+                    sidebar.classList.remove('open');
+                } else {
+                    sidebar.classList.add('open');
+                }
+            }
+            
+            checkWidth();
+            
+            window.addEventListener('resize', checkWidth);
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>

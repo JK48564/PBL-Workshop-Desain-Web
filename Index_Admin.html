@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Sistem Layanan Kesehatan e-Government</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --info: #1abc9c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --sidebar-width: 280px;
+            --header-height: 70px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--primary);
+            color: white;
+            transition: all 0.3s ease;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            background: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            height: var(--header-height);
+        }
+        
+        .sidebar-header img {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .sidebar-header h2 {
+            font-size: 20px;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .menu-section {
+            padding: 10px 20px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #95a5a6;
+            margin-top: 15px;
+        }
+        
+        .sidebar-menu a {
+            color: #ddd;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            transition: all 0.3s;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: var(--dark);
+            color: white;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .submenu {
+            padding-left: 30px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .submenu.show {
+            max-height: 500px;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin-left: var(--sidebar-width);
+        }
+        
+        .top-header {
+            background: white;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            height: var(--header-height);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--light);
+            border-radius: 20px;
+            padding: 5px 15px;
+            width: 300px;
+        }
+        
+        .search-bar input {
+            background: transparent;
+            border: none;
+            padding: 8px;
+            width: 100%;
+            outline: none;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .content {
+            padding: 30px;
+            flex: 1;
+        }
+        
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-header h1 {
+            font-size: 28px;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .bg-primary { background: var(--secondary); color: white; }
+        .bg-success { background: var(--success); color: white; }
+        .bg-warning { background: var(--warning); color: white; }
+        .bg-accent { background: var(--accent); color: white; }
+        .bg-info { background: var(--info); color: white; }
+        
+        .card h3 {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+        
+        .card p {
+            color: #777;
+            font-size: 14px;
+        }
+        
+        .content-section {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .section-header h2 {
+            font-size: 20px;
+            color: var(--dark);
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-outline {
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+            background: transparent;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background: #e7f6ef;
+            color: var(--success);
+        }
+        
+        .status-inactive {
+            background: #fde9e9;
+            color: var(--accent);
+        }
+        
+        .status-warning {
+            background: #fef5e9;
+            color: var(--warning);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #777;
+            transition: all 0.2s;
+        }
+        
+        .action-btn:hover {
+            background: #f5f5f5;
+            color: var(--secondary);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin-top: 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--secondary);
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            color: #777;
+            font-size: 14px;
+        }
+        
+        .notification-badge {
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--secondary);
+            color: var(--secondary);
+            font-weight: 500;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .close {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .menu-toggle {
+            display: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .table-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 5px;
+        }
+        
+        .page-btn {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .page-btn.active {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+        
+        .chart-placeholder {
+            background: #f9f9f9;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .error-message {
+            color: var(--accent);
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+        }
+        
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 70px;
+            }
+            
+            .sidebar-header h2, .sidebar-menu span, .menu-section {
+                display: none;
+            }
+            
+            .sidebar-header {
+                justify-content: center;
+            }
+            
+            .sidebar-menu a {
+                justify-content: center;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .top-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+                height: auto;
+                padding: 15px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .sidebar.open {
+                width: 280px;
+            }
+            
+            .sidebar.open .sidebar-header h2, 
+            .sidebar.open .sidebar-menu span, 
+            .sidebar.open .menu-section {
+                display: block;
+            }
+            
+            .sidebar.open .sidebar-menu a {
+                justify-content: flex-start;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .filter-row {
+                flex-direction: column;
+            }
+            
+            .filter-group {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MCA1MCI+PHBhdGggZD0iTTI1IDVDMTQuNzg2IDUgNi41IDEzLjI4NiA2LjUgMjMuNWMwIDUuNDI3IDIuMzgyIDEwLjMwOCA2LjE3NiAxMy42OTdsLTAuODc1IDQuNzYyYzAuMDA3IDAuMTYzIDAuMDk0IDAuMzEzIDAuMjI2IDAuNDA2YzAuMTM0IDAuMDk0IDAuMzA2IDAuMTE3IDAuNDU2IDAuMDZsNS4wODgtMi4zMTJjMS41NTYgMC40NDMgMy4xOTYgMC42ODEgNC44ODkgMC42ODFjMTAuMjE0IDAgMTguNS04LjI4NiAxOC41LTE4LjVTMzUuMjE0IDUgMjUgNXoiIGZpbGw9IiMzNDk4ZGIiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjE4IiByPSIzIiBmaWxsPSJ3aGl0ZSIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iMTgiIHI9IjMiIGZpbGw9IndoaXRlIi8+PHBhdGggZD0iTTE2IDI4YzEgMyA0IDUgNyA1czYtMiA3LTUiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==" alt="Logo">
+                <h2>Admin Panel</h2>
+            </div>
+            <nav class="sidebar-menu">
+                <div class="menu-section">Menu Utama</div>
+                <ul>
+                    <li><a href="Index_Admin.html" class="active"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+                    <li><a href="#"><i class="fas fa-chart-line"></i> <span>Statistik & Laporan</span></a></li>
+                </ul>
+                
+                <div class="menu-section">Manajemen Pengguna</div>
+                <ul>
+                    <li><a href="#"><i class="fas fa-user-shield"></i> <span>Manajemen Akun</span></a></li>
+                    <li><a href="#"><i class="fas fa-users-cog"></i> <span>Role & Permission</span></a></li>
+                    <li><a href="#"><i class="fas fa-history"></i> <span>Audit Trail</span></a></li>
+                </ul>
+                
+                <div class="menu-section">Manajemen Data</div>
+                <ul>
+                    <li><a href="Laporan_pasien.html"><i class="fas fa-user-injured"></i> <span>Data Pasien</span></a></li>
+                    <li><a href="Manajemen Dokter.html"><i class="fas fa-user-md"></i> <span>Tenaga Kesehatan</span></a></li>
+                    <li><a href="Manajemen_fasilitas.html"><i class="fas fa-hospital"></i> <span>Fasilitas Kesehatan</span></a></li>
+                    <li><a href="#"><i class="fas fa-pills"></i> <span>Manajemen Obat</span></a></li>
+                </ul>
+                
+                <div class="menu-section">Layanan</div>
+                <ul>
+                    <li><a href="#"><i class="fas fa-calendar-check"></i> <span>Janji Temu</span></a></li>
+                    <li><a href="#"><i class="fas fa-clock"></i> <span>Manajemen Antrian</span></a></li>
+                    <li><a href="#"><i class="fas fa-exchange-alt"></i> <span>Rujukan</span></a></li>
+                </ul>
+                
+                <div class="menu-section">Integrasi & Keamanan</div>
+                <ul>
+                    <li><a href="#"><i class="fas fa-plug"></i> <span>Integrasi API</span></a></li>
+                    <li><a href="#"><i class="fas fa-shield-alt"></i> <span>Keamanan Data</span></a></li>
+                    <li><a href="#"><i class="fas fa-database"></i> <span>Backup & Recovery</span></a></li>
+                </ul>
+                
+                <div class="menu-section">Konten & Pengaturan</div>
+                <ul>
+                    <li><a href="#"><i class="fas fa-newspaper"></i> <span>Informasi Kesehatan</span></a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> <span>Pengaturan Sistem</span></a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <div class="top-header">
+                <div class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="globalSearch" placeholder="Cari...">
+                </div>
+                <div class="user-info">
+                    <div class="notifications" style="position: relative;">
+                        <i class="fas fa-bell" id="notificationIcon"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    <div class="user-avatar">
+                        <span>A</span>
+                    </div>
+                    <div class="user-details">
+                        <h4>Admin User</h4>
+                        <p>Super Administrator</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="dashboard-header">
+                    <h1>Dashboard Admin</h1>
+                    <p>Selamat datang di panel administrasi sistem layanan kesehatan e-Government</p>
+                </div>
+
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <div class="card-icon bg-primary">
+                            <i class="fas fa-user-injured"></i>
+                        </div>
+                        <h3 id="totalPatients">2,548</h3>
+                        <p>Pasien Terdaftar</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon bg-success">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <h3 id="totalAppointments">324</h3>
+                        <p>Janji Temu Hari Ini</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon bg-warning">
+                            <i class="fas fa-pills"></i>
+                        </div>
+                        <h3>42</h3>
+                        <p>Obat Akan Kadaluarsa</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon bg-accent">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <h3>18</h3>
+                        <p>Rujukan Tertunda</p>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <i class="fas fa-user-md" style="color: #3498db;"></i>
+                        <div class="stat-value">142</div>
+                        <div class="stat-label">Dokter</div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-procedures" style="color: #2ecc71;"></i>
+                        <div class="stat-value">28</div>
+                        <div class="stat-label">Ruang Rawat</div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-hospital" style="color: #f39c12;"></i>
+                        <div class="stat-value">18</div>
+                        <div class="stat-label">Fasilitas Kesehatan</div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-prescription" style="color: #e74c3c;"></i>
+                        <div class="stat-value">756</div>
+                        <div class="stat-label">Resep Bulan Ini</div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2>Manajemen Pengguna & Hak Akses</h2>
+                        <button class="btn btn-primary" id="addUserBtn"><i class="fas fa-plus"></i> Tambah Pengguna</button>
+                    </div>
+                    
+                    <div class="tabs">
+                        <div class="tab active" data-tab="users">Daftar Pengguna</div>
+                        <div class="tab" data-tab="roles">Role & Permission</div>
+                        <div class="tab" data-tab="audit">Audit Trail</div>
+                    </div>
+                    
+                    <div class="tab-content active" id="users-tab">
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label for="user-role-filter">Filter Role</label>
+                                <select id="user-role-filter">
+                                    <option value="">Semua Role</option>
+                                    <option value="Super Administrator">Super Administrator</option>
+                                    <option value="Admin Rumah Sakit">Admin Rumah Sakit</option>
+                                    <option value="Admin Puskesmas">Admin Puskesmas</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="user-status-filter">Filter Status</label>
+                                <select id="user-status-filter">
+                                    <option value="">Semua Status</option>
+                                    <option value="Aktif">Aktif</option>
+                                    <option value="Nonaktif">Nonaktif</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="user-search">Cari Pengguna</label>
+                                <input type="text" id="user-search" placeholder="Nama atau email">
+                            </div>
+                        </div>
+                        
+                        <table id="users-table">
+                            <thead>
+                                <tr>
+                                    <th>Nama Pengguna</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Terakhir Login</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body">
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="tab-content" id="roles-tab">
+                        <p>Pengelolaan role dan permission untuk berbagai level akses pengguna.</p>
+                    </div>
+                    
+                    <div class="tab-content" id="audit-tab">
+                        <p>Log aktivitas sistem untuk keamanan dan akuntabilitas.</p>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2>Manajemen Data Pasien Lanjutan</h2>
+                        <div>
+                            <button class="btn btn-outline" id="exportPatientsBtn">Ekspor Data</button>
+                            <button class="btn btn-primary" id="addPatientBtn"><i class="fas fa-plus"></i> Tambah Pasien</button>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="nik">Verifikasi NIK</label>
+                            <input type="text" id="nik" placeholder="Masukkan NIK pasien">
+                        </div>
+                        <div class="filter-group">
+                            <label for="patient-status-filter">Filter Status</label>
+                            <select id="patient-status-filter">
+                                <option value="">Semua Status</option>
+                                <option value="Terverifikasi">Terverifikasi</option>
+                                <option value="Perlu Verifikasi">Perlu Verifikasi</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="patient-search">Cari Pasien</label>
+                            <input type="text" id="patient-search" placeholder="Nama atau ID pasien">
+                        </div>
+                    </div>
+                    
+                    <table id="patients-table">
+                        <thead>
+                            <tr>
+                                <th>ID Pasien</th>
+                                <th>Nama</th>
+                                <th>NIK</th>
+                                <th>Tanggal Lahir</th>
+                                <th>Rekam Medis</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patients-table-body">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2>Manajemen Janji Temu & Antrian</h2>
+                        <button class="btn btn-primary" id="addAppointmentBtn"><i class="fas fa-plus"></i> Janji Baru</button>
+                    </div>
+                    
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="appointment-date">Filter Tanggal</label>
+                            <input type="date" id="appointment-date">
+                        </div>
+                        <div class="filter-group">
+                            <label for="appointment-doctor">Filter Dokter</label>
+                            <select id="appointment-doctor">
+                                <option value="">Semua Dokter</option>
+                                <option value="Dr. Ahmad Surya">Dr. Ahmad Surya</option>
+                                <option value="Dr. Budi Santoso">Dr. Budi Santoso</option>
+                                <option value="Dr. Citra Dewi">Dr. Citra Dewi</option>
+                                <option value="Dr. Deni Pratama">Dr. Deni Pratama</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="appointment-status">Filter Status</label>
+                            <select id="appointment-status">
+                                <option value="">Semua Status</option>
+                                <option value="Terkonfirmasi">Terkonfirmasi</option>
+                                <option value="Menunggu">Menunggu</option>
+                                <option value="Dibatalkan">Dibatalkan</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <table id="appointment-table">
+                        <thead>
+                            <tr>
+                                <th>No. Janji</th>
+                                <th>Nama Pasien</th>
+                                <th>Dokter</th>
+                                <th>Tanggal & Waktu</th>
+                                <th>Status</th>
+                                <th>Notifikasi</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointment-table-body">
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="addUserModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="userModalTitle">Tambah Pengguna Baru</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="addUserForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new-user-name">Nama Lengkap *</label>
+                            <input type="text" id="new-user-name" placeholder="Masukkan nama lengkap" required>
+                            <span class="error-message" id="nameError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-user-email">Email *</label>
+                            <input type="email" id="new-user-email" placeholder="Masukkan alamat email" required>
+                            <span class="error-message" id="emailError"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new-user-role">Role *</label>
+                            <select id="new-user-role" required>
+                                <option value="">Pilih Role</option>
+                                <option value="Super Administrator">Super Administrator</option>
+                                <option value="Admin Rumah Sakit">Admin Rumah Sakit</option>
+                                <option value="Admin Puskesmas">Admin Puskesmas</option>
+                                <option value="Operator">Operator</option>
+                            </select>
+                            <span class="error-message" id="roleError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-user-facility">Fasilitas Kesehatan</label>
+                            <select id="new-user-facility">
+                                <option value="">Pilih Fasilitas</option>
+                                <option value="RSUD Kota">RSUD Kota</option>
+                                <option value="Puskesmas Kecamatan">Puskesmas Kecamatan</option>
+                                <option value="Klinik Pratama">Klinik Pratama</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new-user-password">Password *</label>
+                            <input type="password" id="new-user-password" placeholder="Masukkan password" required>
+                            <span class="error-message" id="passwordError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-user-confirm-password">Konfirmasi Password *</label>
+                            <input type="password" id="new-user-confirm-password" placeholder="Konfirmasi password" required>
+                            <span class="error-message" id="confirmPasswordError"></span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelUserBtn">Batal</button>
+                <button class="btn btn-primary" id="saveUserBtn">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="addPatientModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="patientModalTitle">Tambah Pasien Baru</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="addPatientForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new-patient-id">ID Pasien *</label>
+                            <input type="text" id="new-patient-id" placeholder="Masukkan ID pasien" required>
+                            <span class="error-message" id="patientIdError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-patient-name">Nama Lengkap *</label>
+                            <input type="text" id="new-patient-name" placeholder="Masukkan nama lengkap" required>
+                            <span class="error-message" id="patientNameError"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new-patient-nik">NIK *</label>
+                            <input type="text" id="new-patient-nik" placeholder="Masukkan NIK" required>
+                            <span class="error-message" id="patientNikError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-patient-birthdate">Tanggal Lahir *</label>
+                            <input type="date" id="new-patient-birthdate" required>
+                            <span class="error-message" id="patientBirthdateError"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new-patient-address">Alamat</label>
+                            <textarea id="new-patient-address" placeholder="Masukkan alamat"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-patient-phone">Telepon</label>
+                            <input type="tel" id="new-patient-phone" placeholder="Masukkan nomor telepon">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelPatientBtn">Batal</button>
+                <button class="btn btn-primary" id="savePatientBtn">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="addAppointmentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="appointmentModalTitle">Tambah Janji Temu Baru</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="addAppointmentForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new-appointment-patient">Pilih Pasien *</label>
+                            <select id="new-appointment-patient" required>
+                                <option value="">Pilih Pasien</option>
+                            </select>
+                            <span class="error-message" id="appointmentPatientError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-appointment-doctor">Pilih Dokter *</label>
+                            <select id="new-appointment-doctor" required>
+                                <option value="">Pilih Dokter</option>
+                                <option value="Dr. Ahmad Surya">Dr. Ahmad Surya</option>
+                                <option value="Dr. Budi Santoso">Dr. Budi Santoso</option>
+                                <option value="Dr. Citra Dewi">Dr. Citra Dewi</option>
+                                <option value="Dr. Deni Pratama">Dr. Deni Pratama</option>
+                            </select>
+                            <span class="error-message" id="appointmentDoctorError"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new-appointment-date">Tanggal *</label>
+                            <input type="date" id="new-appointment-date" required>
+                            <span class="error-message" id="appointmentDateError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-appointment-time">Waktu *</label>
+                            <input type="time" id="new-appointment-time" required>
+                            <span class="error-message" id="appointmentTimeError"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-appointment-notes">Catatan</label>
+                        <textarea id="new-appointment-notes" placeholder="Masukkan catatan tambahan"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelAppointmentBtn">Batal</button>
+                <button class="btn btn-primary" id="saveAppointmentBtn">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let users = [
+            {
+                name: 'Admin Pusat',
+                email: 'admin@pusat.kesehatan.go.id',
+                role: 'Super Administrator',
+                status: 'Aktif',
+                lastLogin: '12 Sep 2023, 08:30'
+            },
+            {
+                name: 'Budi Santoso',
+                email: 'budi@rsud.kota.go.id',
+                role: 'Admin Rumah Sakit',
+                status: 'Aktif',
+                lastLogin: '11 Sep 2023, 14:22'
+            },
+            {
+                name: 'Sari Indah',
+                email: 'sari@puskesmas.kecamatan.go.id',
+                role: 'Admin Puskesmas',
+                status: 'Nonaktif',
+                lastLogin: '5 Sep 2023, 09:45'
+            }
+        ];
+
+        let patients = [
+            {
+                id: 'P202309001',
+                name: 'Rina Wijaya',
+                nik: '3273012301980001',
+                birthdate: '23 Jan 1998',
+                medicalRecords: 12,
+                status: 'Terverifikasi'
+            },
+            {
+                id: 'P202309002',
+                name: 'Budi Pratama',
+                nik: '3273011505870002',
+                birthdate: '15 Mei 1987',
+                medicalRecords: 8,
+                status: 'Terverifikasi'
+            },
+            {
+                id: 'P202309003',
+                name: 'Sari Indah',
+                nik: '3273014403970003',
+                birthdate: '4 Maret 1997',
+                medicalRecords: 5,
+                status: 'Perlu Verifikasi'
+            }
+        ];
+
+        let appointments = [
+            {
+                id: '#APT202309001',
+                patientName: 'Rina Wijaya',
+                doctor: 'Dr. Ahmad Surya',
+                dateTime: '12 Sep 2023, 10:00',
+                status: 'Terkonfirmasi',
+                notification: 'Terkirim'
+            },
+            {
+                id: '#APT202309002',
+                patientName: 'Budi Pratama',
+                doctor: 'Dr. Citra Dewi',
+                dateTime: '13 Sep 2023, 11:30',
+                status: 'Terkonfirmasi',
+                notification: 'Terkirim'
+            },
+            {
+                id: '#APT202309003',
+                patientName: 'Sari Indah',
+                doctor: 'Dr. Deni Pratama',
+                dateTime: '14 Sep 2023, 14:00',
+                status: 'Menunggu',
+                notification: 'Pending'
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+            const globalSearch = document.getElementById('globalSearch');
+            const notificationIcon = document.getElementById('notificationIcon');
+            const notificationBadge = document.querySelector('.notification-badge');
+            
+            const addUserBtn = document.getElementById('addUserBtn');
+            const addUserModal = document.getElementById('addUserModal');
+            const userModalTitle = document.getElementById('userModalTitle');
+            const cancelUserBtn = document.getElementById('cancelUserBtn');
+            const saveUserBtn = document.getElementById('saveUserBtn');
+            const addUserForm = document.getElementById('addUserForm');
+            
+            const addPatientBtn = document.getElementById('addPatientBtn');
+            const addPatientModal = document.getElementById('addPatientModal');
+            const patientModalTitle = document.getElementById('patientModalTitle');
+            const cancelPatientBtn = document.getElementById('cancelPatientBtn');
+            const savePatientBtn = document.getElementById('savePatientBtn');
+            const addPatientForm = document.getElementById('addPatientForm');
+            
+            const addAppointmentBtn = document.getElementById('addAppointmentBtn');
+            const addAppointmentModal = document.getElementById('addAppointmentModal');
+            const appointmentModalTitle = document.getElementById('appointmentModalTitle');
+            const cancelAppointmentBtn = document.getElementById('cancelAppointmentBtn');
+            const saveAppointmentBtn = document.getElementById('saveAppointmentBtn');
+            const addAppointmentForm = document.getElementById('addAppointmentForm');
+            
+            const closeButtons = document.querySelectorAll('.close');
+            
+            const exportPatientsBtn = document.getElementById('exportPatientsBtn');
+            
+            initDashboard();
+            
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    const tabName = tab.getAttribute('data-tab');
+                    document.getElementById(`${tabName}-tab`).classList.add('active');
+                });
+            });
+            
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth < 768 && 
+                    !sidebar.contains(e.target) && 
+                    !menuToggle.contains(e.target) &&
+                    sidebar.classList.contains('open')) {
+                    sidebar.classList.remove('open');
+                }
+            });
+            
+            addUserBtn.addEventListener('click', () => {
+                userModalTitle.textContent = "Tambah Pengguna Baru";
+                resetUserForm();
+                addUserModal.style.display = 'flex';
+            });
+            
+            addPatientBtn.addEventListener('click', () => {
+                patientModalTitle.textContent = "Tambah Pasien Baru";
+                resetPatientForm();
+                addPatientModal.style.display = 'flex';
+            });
+            
+            addAppointmentBtn.addEventListener('click', () => {
+                appointmentModalTitle.textContent = "Tambah Janji Temu Baru";
+                populateAppointmentPatientSelect();
+                resetAppointmentForm();
+                addAppointmentModal.style.display = 'flex';
+            });
+            
+            closeButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    addUserModal.style.display = 'none';
+                    addPatientModal.style.display = 'none';
+                    addAppointmentModal.style.display = 'none';
+                });
+            });
+            
+            cancelUserBtn.addEventListener('click', () => {
+                addUserModal.style.display = 'none';
+                resetUserForm();
+            });
+            
+            cancelPatientBtn.addEventListener('click', () => {
+                addPatientModal.style.display = 'none';
+                resetPatientForm();
+            });
+            
+            cancelAppointmentBtn.addEventListener('click', () => {
+                addAppointmentModal.style.display = 'none';
+                resetAppointmentForm();
+            });
+            
+            window.addEventListener('click', (e) => {
+                if (e.target === addUserModal) {
+                    addUserModal.style.display = 'none';
+                    resetUserForm();
+                }
+                if (e.target === addPatientModal) {
+                    addPatientModal.style.display = 'none';
+                    resetPatientForm();
+                }
+                if (e.target === addAppointmentModal) {
+                    addAppointmentModal.style.display = 'none';
+                    resetAppointmentForm();
+                }
+            });
+            
+            saveUserBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (validateUserForm()) {
+                    const newUser = {
+                        name: document.getElementById('new-user-name').value,
+                        email: document.getElementById('new-user-email').value,
+                        role: document.getElementById('new-user-role').value,
+                        status: 'Aktif',
+                        lastLogin: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) + ', ' + 
+                                  new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+                    };
+                    
+                    users.push(newUser);
+                    
+                    renderUsers();
+                    updateDashboardStats();
+                    
+                    alert('Pengguna berhasil ditambahkan!');
+                    addUserModal.style.display = 'none';
+                    resetUserForm();
+                }
+            });
+            
+            savePatientBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (validatePatientForm()) {
+                    const newPatient = {
+                        id: document.getElementById('new-patient-id').value,
+                        name: document.getElementById('new-patient-name').value,
+                        nik: document.getElementById('new-patient-nik').value,
+                        birthdate: formatDateForDisplay(document.getElementById('new-patient-birthdate').value),
+                        medicalRecords: 0,
+                        status: 'Perlu Verifikasi'
+                    };
+                    
+                    patients.push(newPatient);
+                    
+                    renderPatients();
+                    updateDashboardStats();
+                    populateAppointmentPatientSelect();
+                    
+                    alert('Pasien berhasil ditambahkan!');
+                    addPatientModal.style.display = 'none';
+                    resetPatientForm();
+                }
+            });
+            
+            saveAppointmentBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (validateAppointmentForm()) {
+                    const newAppointment = {
+                        id: '#APT' + new Date().getTime(),
+                        patientName: document.getElementById('new-appointment-patient').selectedOptions[0].text,
+                        doctor: document.getElementById('new-appointment-doctor').value,
+                        dateTime: formatDateForDisplay(document.getElementById('new-appointment-date').value) + ', ' + 
+                                 document.getElementById('new-appointment-time').value,
+                        status: 'Menunggu',
+                        notification: 'Pending'
+                    };
+                    
+                    appointments.push(newAppointment);
+                    
+                    renderAppointments();
+                    updateDashboardStats();
+                    
+                    alert('Janji temu berhasil ditambahkan!');
+                    addAppointmentModal.style.display = 'none';
+                    resetAppointmentForm();
+                }
+            });
+            
+            exportPatientsBtn.addEventListener('click', () => {
+                alert('Data pasien berhasil diekspor!');
+            });
+            
+            function validateUserForm() {
+                let isValid = true;
+                const name = document.getElementById('new-user-name');
+                const email = document.getElementById('new-user-email');
+                const role = document.getElementById('new-user-role');
+                const password = document.getElementById('new-user-password');
+                const confirmPassword = document.getElementById('new-user-confirm-password');
+                
+                document.querySelectorAll('.error-message').forEach(msg => {
+                    msg.textContent = '';
+                });
+                
+                if (!name.value.trim()) {
+                    document.getElementById('nameError').textContent = 'Nama wajib diisi';
+                    isValid = false;
+                }
+                
+                if (!email.value.trim()) {
+                    document.getElementById('emailError').textContent = 'Email wajib diisi';
+                    isValid = false;
+                } else if (!isValidEmail(email.value)) {
+                    document.getElementById('emailError').textContent = 'Format email tidak valid';
+                    isValid = false;
+                } else if (users.some(u => u.email === email.value)) {
+                    document.getElementById('emailError').textContent = 'Email sudah digunakan';
+                    isValid = false;
+                }
+                
+                if (!role.value) {
+                    document.getElementById('roleError').textContent = 'Role wajib dipilih';
+                    isValid = false;
+                }
+                
+                if (!password.value) {
+                    document.getElementById('passwordError').textContent = 'Password wajib diisi';
+                    isValid = false;
+                } else if (password.value.length < 6) {
+                    document.getElementById('passwordError').textContent = 'Password minimal 6 karakter';
+                    isValid = false;
+                }
+                
+                if (!confirmPassword.value) {
+                    document.getElementById('confirmPasswordError').textContent = 'Konfirmasi password wajib diisi';
+                    isValid = false;
+                } else if (password.value !== confirmPassword.value) {
+                    document.getElementById('confirmPasswordError').textContent = 'Password tidak cocok';
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+            
+            function validatePatientForm() {
+                let isValid = true;
+                const id = document.getElementById('new-patient-id');
+                const name = document.getElementById('new-patient-name');
+                const nik = document.getElementById('new-patient-nik');
+                const birthdate = document.getElementById('new-patient-birthdate');
+                
+                document.querySelectorAll('.error-message').forEach(msg => {
+                    msg.textContent = '';
+                });
+                
+                if (!id.value.trim()) {
+                    document.getElementById('patientIdError').textContent = 'ID pasien wajib diisi';
+                    isValid = false;
+                } else if (patients.some(p => p.id === id.value)) {
+                    document.getElementById('patientIdError').textContent = 'ID pasien sudah digunakan';
+                    isValid = false;
+                }
+                
+                if (!name.value.trim()) {
+                    document.getElementById('patientNameError').textContent = 'Nama wajib diisi';
+                    isValid = false;
+                }
+                
+                if (!nik.value.trim()) {
+                    document.getElementById('patientNikError').textContent = 'NIK wajib diisi';
+                    isValid = false;
+                } else if (nik.value.length !== 16) {
+                    document.getElementById('patientNikError').textContent = 'NIK harus 16 digit';
+                    isValid = false;
+                } else if (patients.some(p => p.nik === nik.value)) {
+                    document.getElementById('patientNikError').textContent = 'NIK sudah terdaftar';
+                    isValid = false;
+                }
+                
+                if (!birthdate.value) {
+                    document.getElementById('patientBirthdateError').textContent = 'Tanggal lahir wajib diisi';
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+            
+            function validateAppointmentForm() {
+                let isValid = true;
+                const patient = document.getElementById('new-appointment-patient');
+                const doctor = document.getElementById('new-appointment-doctor');
+                const date = document.getElementById('new-appointment-date');
+                const time = document.getElementById('new-appointment-time');
+                
+                document.querySelectorAll('.error-message').forEach(msg => {
+                    msg.textContent = '';
+                });
+                
+                if (!patient.value) {
+                    document.getElementById('appointmentPatientError').textContent = 'Pasien wajib dipilih';
+                    isValid = false;
+                }
+                
+                if (!doctor.value) {
+                    document.getElementById('appointmentDoctorError').textContent = 'Dokter wajib dipilih';
+                    isValid = false;
+                }
+                
+                if (!date.value) {
+                    document.getElementById('appointmentDateError').textContent = 'Tanggal wajib diisi';
+                    isValid = false;
+                } else if (new Date(date.value) < new Date().setHours(0, 0, 0, 0)) {
+                    document.getElementById('appointmentDateError').textContent = 'Tanggal tidak boleh di masa lalu';
+                    isValid = false;
+                }
+                
+                if (!time.value) {
+                    document.getElementById('appointmentTimeError').textContent = 'Waktu wajib diisi';
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+            
+            function isValidEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+            
+            function resetUserForm() {
+                addUserForm.reset();
+                document.querySelectorAll('.error-message').forEach(msg => {
+                    msg.textContent = '';
+                });
+            }
+            
+            function resetPatientForm() {
+                addPatientForm.reset();
+                document.querySelectorAll('.error-message').forEach(msg => {
+                    msg.textContent = '';
+                });
+            }
+            
+            function resetAppointmentForm() {
+                addAppointmentForm.reset();
+                document.querySelectorAll('.error-message').forEach(msg => {
+                    msg.textContent = '';
+                });
+            }
+            
+            globalSearch.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                document.querySelectorAll('table tbody tr').forEach(row => {
+                    let rowText = '';
+                    row.querySelectorAll('td').forEach(cell => {
+                        rowText += cell.textContent.toLowerCase() + ' ';
+                    });
+                    
+                    if (rowText.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+            
+            notificationIcon.addEventListener('click', function() {
+                alert('Anda memiliki 3 notifikasi baru');
+                notificationBadge.style.display = 'none';
+            });
+            
+            const userRoleFilter = document.getElementById('user-role-filter');
+            const userStatusFilter = document.getElementById('user-status-filter');
+            const userSearch = document.getElementById('user-search');
+            
+            userRoleFilter.addEventListener('change', filterUsers);
+            userStatusFilter.addEventListener('change', filterUsers);
+            userSearch.addEventListener('input', filterUsers);
+            
+            function filterUsers() {
+                const roleValue = userRoleFilter.value;
+                const statusValue = userStatusFilter.value;
+                const searchValue = userSearch.value.toLowerCase();
+                
+                const filteredUsers = users.filter(user => {
+                    const matchesRole = !roleValue || user.role === roleValue;
+                    const matchesStatus = !statusValue || user.status === statusValue;
+                    const matchesSearch = !searchValue || 
+                        user.name.toLowerCase().includes(searchValue) || 
+                        user.email.toLowerCase().includes(searchValue);
+                    
+                    return matchesRole && matchesStatus && matchesSearch;
+                });
+                
+                renderUsers(filteredUsers);
+            }
+            
+            const patientStatusFilter = document.getElementById('patient-status-filter');
+            const patientSearch = document.getElementById('patient-search');
+            
+            patientStatusFilter.addEventListener('change', filterPatients);
+            patientSearch.addEventListener('input', filterPatients);
+            
+            function filterPatients() {
+                const statusValue = patientStatusFilter.value;
+                const searchValue = patientSearch.value.toLowerCase();
+                
+                const filteredPatients = patients.filter(patient => {
+                    const matchesStatus = !statusValue || patient.status === statusValue;
+                    const matchesSearch = !searchValue || 
+                        patient.name.toLowerCase().includes(searchValue) || 
+                        patient.id.toLowerCase().includes(searchValue) ||
+                        patient.nik.includes(searchValue);
+                    
+                    return matchesStatus && matchesSearch;
+                });
+                
+                renderPatients(filteredPatients);
+            }
+            
+            const appointmentDateFilter = document.getElementById('appointment-date');
+            const appointmentDoctorFilter = document.getElementById('appointment-doctor');
+            const appointmentStatusFilter = document.getElementById('appointment-status');
+            
+            appointmentDateFilter.addEventListener('change', filterAppointments);
+            appointmentDoctorFilter.addEventListener('change', filterAppointments);
+            appointmentStatusFilter.addEventListener('change', filterAppointments);
+            
+            function filterAppointments() {
+                const dateValue = appointmentDateFilter.value;
+                const doctorValue = appointmentDoctorFilter.value;
+                const statusValue = appointmentStatusFilter.value;
+                
+                const filteredAppointments = appointments.filter(appointment => {
+                    const matchesDate = !dateValue || appointment.dateTime.includes(formatDateForDisplay(dateValue));
+                    const matchesDoctor = !doctorValue || appointment.doctor === doctorValue;
+                    const matchesStatus = !statusValue || appointment.status === statusValue;
+                    
+                    return matchesDate && matchesDoctor && matchesStatus;
+                });
+                
+                renderAppointments(filteredAppointments);
+            }
+            
+            function initDashboard() {
+                renderUsers();
+                renderPatients();
+                renderAppointments();
+                updateDashboardStats();
+            }
+            
+            function renderUsers(usersToRender = users) {
+                const usersTableBody = document.getElementById('users-table-body');
+                usersTableBody.innerHTML = '';
+                
+                if (usersToRender.length === 0) {
+                    usersTableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Tidak ada data pengguna</td></tr>';
+                    return;
+                }
+                
+                usersToRender.forEach((user, index) => {
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${user.role}</td>
+                        <td><span class="status ${user.status === 'Aktif' ? 'status-active' : 'status-inactive'}">${user.status}</span></td>
+                        <td>${user.lastLogin}</td>
+                        <td class="action-buttons">
+                            <span class="action-btn edit-user" data-index="${index}"><i class="fas fa-edit"></i></span>
+                            <span class="action-btn change-password" data-index="${index}"><i class="fas fa-key"></i></span>
+                            <span class="action-btn toggle-status" data-index="${index}">${user.status === 'Aktif' ? '<i class="fas fa-ban"></i>' : '<i class="fas fa-check"></i>'}</span>
+                        </td>
+                    `;
+                    
+                    usersTableBody.appendChild(row);
+                });
+                
+                document.querySelectorAll('.edit-user').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        editUser(index);
+                    });
+                });
+                
+                document.querySelectorAll('.change-password').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        changePassword(index);
+                    });
+                });
+                
+                document.querySelectorAll('.toggle-status').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        toggleUserStatus(index);
+                    });
+                });
+            }
+            
+            function renderPatients(patientsToRender = patients) {
+                const patientsTableBody = document.getElementById('patients-table-body');
+                patientsTableBody.innerHTML = '';
+                
+                if (patientsToRender.length === 0) {
+                    patientsTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Tidak ada data pasien</td></tr>';
+                    return;
+                }
+                
+                patientsToRender.forEach((patient, index) => {
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td>${patient.id}</td>
+                        <td>${patient.name}</td>
+                        <td>${patient.nik}</td>
+                        <td>${patient.birthdate}</td>
+                        <td>${patient.medicalRecords} Catatan</td>
+                        <td><span class="status ${patient.status === 'Terverifikasi' ? 'status-active' : 'status-warning'}">${patient.status}</span></td>
+                        <td class="action-buttons">
+                            <span class="action-btn view-patient" data-index="${index}"><i class="fas fa-eye"></i></span>
+                            <span class="action-btn edit-patient" data-index="${index}"><i class="fas fa-file-medical"></i></span>
+                            <span class="action-btn toggle-verification" data-index="${index}"><i class="fas fa-exchange-alt"></i></span>
+                        </td>
+                    `;
+                    
+                    patientsTableBody.appendChild(row);
+                });
+                
+                document.querySelectorAll('.view-patient').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        viewPatient(index);
+                    });
+                });
+                
+                document.querySelectorAll('.edit-patient').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        editPatient(index);
+                    });
+                });
+                
+                document.querySelectorAll('.toggle-verification').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        togglePatientVerification(index);
+                    });
+                });
+            }
+            
+            function renderAppointments(appointmentsToRender = appointments) {
+                const appointmentTableBody = document.getElementById('appointment-table-body');
+                appointmentTableBody.innerHTML = '';
+                
+                if (appointmentsToRender.length === 0) {
+                    appointmentTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Tidak ada data janji temu</td></tr>';
+                    return;
+                }
+                
+                appointmentsToRender.forEach((appointment, index) => {
+                    const row = document.createElement('tr');
+                    
+                    let notificationIcon = '';
+                    if (appointment.notification === 'Terkirim') {
+                        notificationIcon = '<i class="fas fa-check-circle" style="color: #2ecc71;"></i>';
+                    } else {
+                        notificationIcon = '<i class="fas fa-exclamation-triangle" style="color: #f39c12;"></i>';
+                    }
+                    
+                    row.innerHTML = `
+                        <td>${appointment.id}</td>
+                        <td>${appointment.patientName}</td>
+                        <td>${appointment.doctor}</td>
+                        <td>${appointment.dateTime}</td>
+                        <td><span class="status ${appointment.status === 'Terkonfirmasi' ? 'status-active' : appointment.status === 'Menunggu' ? 'status-inactive' : 'status-warning'}">${appointment.status}</span></td>
+                        <td>${notificationIcon} ${appointment.notification}</td>
+                        <td class="action-buttons">
+                            <span class="action-btn edit-appointment" data-index="${index}"><i class="fas fa-edit"></i></span>
+                            <span class="action-btn ${appointment.status === 'Menunggu' ? 'confirm-appointment' : 'cancel-appointment'}" data-index="${index}">${appointment.status === 'Menunggu' ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>'}</span>
+                            <span class="action-btn send-notification" data-index="${index}"><i class="fas fa-sms"></i></span>
+                        </td>
+                    `;
+                    
+                    appointmentTableBody.appendChild(row);
+                });
+                
+                document.querySelectorAll('.edit-appointment').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        editAppointment(index);
+                    });
+                });
+                
+                document.querySelectorAll('.confirm-appointment').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        confirmAppointment(index);
+                    });
+                });
+                
+                document.querySelectorAll('.cancel-appointment').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        cancelAppointment(index);
+                    });
+                });
+                
+                document.querySelectorAll('.send-notification').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        sendNotification(index);
+                    });
+                });
+            }
+            
+            function updateDashboardStats() {
+                document.getElementById('totalPatients').textContent = patients.length;
+                document.getElementById('totalAppointments').textContent = appointments.filter(a => a.status === 'Terkonfirmasi').length;
+            }
+            
+            function populateAppointmentPatientSelect() {
+                const appointmentPatientSelect = document.getElementById('new-appointment-patient');
+                appointmentPatientSelect.innerHTML = '<option value="">Pilih Pasien</option>';
+                
+                patients.forEach(patient => {
+                    const option = document.createElement('option');
+                    option.value = patient.id;
+                    option.textContent = `${patient.name} (${patient.id})`;
+                    appointmentPatientSelect.appendChild(option);
+                });
+            }
+            
+            function formatDateForDisplay(dateString) {
+                const date = new Date(dateString);
+                const options = { day: 'numeric', month: 'short', year: 'numeric' };
+                return date.toLocaleDateString('id-ID', options);
+            }
+            
+            function editUser(index) {
+                const user = users[index];
+                userModalTitle.textContent = "Edit Data Pengguna";
+                document.getElementById('new-user-name').value = user.name;
+                document.getElementById('new-user-email').value = user.email;
+                document.getElementById('new-user-email').disabled = true;
+                document.getElementById('new-user-role').value = user.role;
+                document.getElementById('new-user-password').required = false;
+                document.getElementById('new-user-confirm-password').required = false;
+                
+                saveUserBtn.onclick = function(e) {
+                    e.preventDefault();
+                    if (validateUserForm()) {
+                        user.name = document.getElementById('new-user-name').value;
+                        user.role = document.getElementById('new-user-role').value;
+                        
+                        renderUsers();
+                        
+                        alert('Data pengguna berhasil diperbarui!');
+                        addUserModal.style.display = 'none';
+                        resetUserForm();
+                        
+                        saveUserBtn.onclick = originalSaveUserHandler;
+                    }
+                };
+                
+                addUserModal.style.display = 'flex';
+            }
+            
+            function changePassword(index) {
+                const user = users[index];
+                const newPassword = prompt(`Masukkan password baru untuk ${user.name}:`);
+                if (newPassword) {
+                    if (newPassword.length < 6) {
+                        alert('Password harus minimal 6 karakter!');
+                    } else {
+                        alert(`Password untuk ${user.name} berhasil diubah!`);
+                    }
+                }
+            }
+            
+            function toggleUserStatus(index) {
+                const user = users[index];
+                user.status = user.status === 'Aktif' ? 'Nonaktif' : 'Aktif';
+                renderUsers();
+                alert(`Status ${user.name} berhasil diubah menjadi ${user.status}`);
+            }
+            
+            const originalSaveUserHandler = saveUserBtn.onclick;
+            
+            function viewPatient(index) {
+                const patient = patients[index];
+                alert(`Detail Pasien:\n\nID: ${patient.id}\nNama: ${patient.name}\nNIK: ${patient.nik}\nTanggal Lahir: ${patient.birthdate}\nStatus: ${patient.status}`);
+            }
+            
+            function editPatient(index) {
+                const patient = patients[index];
+                patientModalTitle.textContent = "Edit Data Pasien";
+                document.getElementById('new-patient-id').value = patient.id;
+                document.getElementById('new-patient-id').disabled = true;
+                document.getElementById('new-patient-name').value = patient.name;
+                document.getElementById('new-patient-nik').value = patient.nik;
+                
+                savePatientBtn.onclick = function(e) {
+                    e.preventDefault();
+                    if (validatePatientForm()) {
+                        patient.name = document.getElementById('new-patient-name').value;
+                        patient.nik = document.getElementById('new-patient-nik').value;
+                        
+                        renderPatients();
+                        populateAppointmentPatientSelect();
+                        
+                        alert('Data pasien berhasil diperbarui!');
+                        addPatientModal.style.display = 'none';
+                        resetPatientForm();
+                        
+                        savePatientBtn.onclick = originalSavePatientHandler;
+                    }
+                };
+                
+                addPatientModal.style.display = 'flex';
+            }
+            
+            function togglePatientVerification(index) {
+                const patient = patients[index];
+                patient.status = patient.status === 'Terverifikasi' ? 'Perlu Verifikasi' : 'Terverifikasi';
+                renderPatients();
+                alert(`Status verifikasi ${patient.name} berhasil diubah menjadi ${patient.status}`);
+            }
+            
+            const originalSavePatientHandler = savePatientBtn.onclick;
+            
+            function editAppointment(index) {
+                alert('Fitur edit janji temu akan diimplementasikan di versi selanjutnya');
+            }
+            
+            function confirmAppointment(index) {
+                const appointment = appointments[index];
+                appointment.status = 'Terkonfirmasi';
+                appointment.notification = 'Terkirim';
+                renderAppointments();
+                alert(`Janji temu ${appointment.id} berhasil dikonfirmasi`);
+            }
+            
+            function cancelAppointment(index) {
+                const appointment = appointments[index];
+                if (confirm(`Apakah Anda yakin ingin membatalkan janji temu ${appointment.id}?`)) {
+                    appointment.status = 'Dibatalkan';
+                    renderAppointments();
+                    alert(`Janji temu ${appointment.id} berhasil dibatalkan`);
+                }
+            }
+            
+            function sendNotification(index) {
+                const appointment = appointments[index];
+                appointment.notification = 'Terkirim';
+                renderAppointments();
+                alert(`Notifikasi untuk janji temu ${appointment.id} berhasil dikirim`);
+            }
+            
+            function checkWidth() {
+                if (window.innerWidth < 768) {
+                    sidebar.classList.remove('open');
+                } else {
+                    sidebar.classList.add('open');
+                }
+            }
+            
+            checkWidth();
+            
+            window.addEventListener('resize', checkWidth);
+        });
+    </script>
+</body>
+</html>
